@@ -20,10 +20,6 @@
 
 # Operators
 
-#expression:
-Boolean or arithematic
-Constructed Recu# Logical
-
 1. &&& - Logical 'and'
     - Higher precedence than 'or'
 2. ||| - Logical 'or'
@@ -31,6 +27,7 @@ Constructed Recu# Logical
 ### No relational operators
 
 # Main
+
 1. Minumun one declaration
 2. Minimum one assignment
 3. All assignments after all declarations.
@@ -38,6 +35,7 @@ Constructed Recu# Logical
 5. Delimiter: blank space
 
 # Declaration
+
     declare v1: integer ;
     declare list of variables a1 a2 : integer ;
     declarelist of variables b1 b2 b3 : boolean ;
