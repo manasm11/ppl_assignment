@@ -1,0 +1,88 @@
+<mainFunction> ===> MAIN SQO SQC <stmtsAndFunctionDefs> END
+<stmtsAndFunctionDefs> ===> <stmtOrFunctionDef> <more_stmtsAndFunctionDefs>
+<more_stmtsAndFunctionDefs> ===> <stmtsAndFunctionDefs>  
+<more_stmtsAndFunctionDefs> ===> e
+<stmtOrFunctionDef> ===> <stmt>
+<stmtOrFunctionDef> ===> <functionDef>
+<stmt> ===> <declarationStmt>  
+<stmt> ===> <assignmentStmt>  
+<stmt> ===> <conditionalStmt>  
+<stmt> ===> <ioStmt>  
+<stmt> ===> <funCallStmt>
+<funCallStmt> ===> <functionCall> SEMICOLON 
+<functionDef> ===> FUNCTION SQO <parameter_list> SQC ASSIGNOP FUNID SQO <parameter_list> SQC <stmtsAndFunctionDefs> END SEMICOLON
+<parameter_list> ===> <type> ID <remainingList>
+<type> ===> INT
+<type> ===> REAL  
+<type> ===> STRING  
+<type> ===> MATRIX
+<remainingList> ===> COMMA <parameter_list>  
+<remainingList> ===> e
+<declarationStmt> ===> <type> <var_list> SEMICOLON
+<assignmentStmt> ===> <assignmentStmt1>  
+<assignmentStmt> ===> <assignmentStmt2>
+<assignmentStmt1> ===> <leftHandSide1> ASSIGNOP <rightHandSide1> SEMICOLON
+<assignmentStmt2> ===> <leftHandSide2> ASSIGNOP <rightHandSide2> SEMICOLON
+<leftHandSide1> ===> ID
+<leftHandSide2> ===> SQO <var_list> SQC
+<rightHandSide1> ===> <arithmeticExpression>
+<rightHandSide1> ===> <size_exp>
+<rightHandSide2> ===> <functionCall>  
+<rightHandSide2> ===> <size_exp>
+<functionCall> ===> FUNID OP <inputParameterList> CL 
+<inputParameterList> ===> <var> <listVar>
+<inputParameterList> ===> e
+<conditionalStmt> ===> IF OP <booleanExpression> CL <stmt><otherStmts> <add_else> ENDIF SEMICOLON
+<add_else> ===> ELSE <stmt> <otherStmts>  
+<add_else> ===> e
+<otherStmts> ===> <stmt> <otherStmts>  
+<otherStmts> ===> e
+<ioStmt> ===> READ OP ID CL SEMICOLON  
+<ioStmt> ===> PRINT OP ID CL SEMICOLON
+<arithmeticExpression> ===> <arithmeticExpression1> <x>
+<x> ===> <operator1> <arithmeticExpression1> <x>  
+<x> ===> e
+<arithmeticExpression1> ===> <arithmeticExpression2> <y>
+<y> ===> <operator2> <arithmeticExpression2> <y>  
+<y> ===> e
+<arithmeticExpression2> ===> OP <arithmeticExpression> CL  
+<arithmeticExpression2> ===> <var>
+<operator1> ===> PLUS  
+<operator1> ===> MINUS
+<operator2> ===> MUL  
+<operator2> ===> DIV
+<booleanExpression> ===> OP <booleanExpression> CL <logicalOp1> OP <booleanExpression> CL  
+<booleanExpression> ===> NOT OP <booleanExpression> CL  
+<booleanExpression> ===> <constrainedVars> <relationalOp> <constrainedVars>
+<constrainedVars> ===> ID <matrix_may_be>
+<constrainedVars> ===> NUM
+<constrainedVars> ===> RNUM
+<var> ===> ID <matrix_may_be>  
+<var> ===> NUM  
+<var> ===> RNUM  
+<var> ===> STR    
+<var> ===> <matrix_actual> 
+<var> ===> <functionCall>
+<size_exp> ===> SIZE ID
+<matrix_may_be> ===> SQO NUM COMMA NUM SQC  
+<matrix_may_be> ===> e
+<logicalOp1> ===> AND  
+<logicalOp1> ===> OR 
+<relationalOp> ===> LT  
+<relationalOp> ===> LE  
+<relationalOp> ===> EQ  
+<relationalOp> ===> GT  
+<relationalOp> ===> GE  
+<relationalOp> ===> NE
+<var_list> ===> ID <more_ids>
+<more_ids> ===> COMMA <var_list>  
+<more_ids> ===> e
+<matrix_actual> ===> SQO <rows> SQC
+<rows> ===> <row> <more_rows>
+<more_rows> ===> SEMICOLON <rows>  
+<more_rows> ===> e
+<row> ===> NUM <more_nums>
+<more_nums> ===> COMMA <row>  
+<more_nums> ===> e
+<listVar> ==> COMMA <inputParameterList>
+<listVar> ==> e
