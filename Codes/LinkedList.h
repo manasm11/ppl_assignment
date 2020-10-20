@@ -36,7 +36,7 @@ real SC,
   &&&,
   |||,
   |, 
-  =,
+  =,https://prod.liveshare.vsengsaas.visualstudio.com/join?49DD4CA1BEDA8F30DBDA22637513F821ED59
   main,
   R1
 	 

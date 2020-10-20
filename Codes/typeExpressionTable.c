@@ -56,7 +56,7 @@ int hash(char* key, int no_slots){
 		if(sum<0)
 			sum = 0;
 	}
-
+d
 	int hashvalue = sum%no_slots;
 
 	return hashvalue;
