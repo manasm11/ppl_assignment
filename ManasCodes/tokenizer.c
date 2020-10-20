@@ -5,6 +5,7 @@
 #define assert(condition, error_message) condition || printf("[-] ERROR: %s\n", error_message) && exitt(1)
 int exitt(int n) { exit(n); }
 char filename[] = "src_code.txt";
+Token *head = NULL;
 int main(int argc, char const *argv[])
 {
     FILE *fp = fopen(filename, "r");
@@ -15,10 +16,12 @@ int main(int argc, char const *argv[])
     {
         for (char *t = strtok(line, " \n"); t; t = strtok(NULL, " \n"))
         {
-            Token tkn;
-            initialize_token(&tkn, lno, ++cno, t);
-            pToken(tkn);
+            add_token(&head, lno, ++cno, t);
         }
     }
+    pTokens(head);
+    printf("\n");
+    pTokens(head);
+    // pTokens(&head);
     return 0;
 }

@@ -1,10 +1,4 @@
-/****
-
-Name: Shivankit Gaind
-
-ID: 2015A7PS0076P
-
-****/
+ 
 
 
 /***********************************************************************************************************************
@@ -1367,99 +1361,14 @@ Token* getNextToken(FILE** file_ptr){
 
 
 //Function for cleaning the file -- removing comments
-void removeComments(char *testcaseFile){
+ 
 
-	//Allocating Memory for buffers
-	lexer_buffer_current = (char*)malloc(sizeof(char)*(BUFFER_SIZE+1));
-	lexer_buffer_previous = (char*)malloc(sizeof(char)*(BUFFER_SIZE+1));
-	
-	//Initializing buffers to 0
-	memset(lexer_buffer_current, 0, sizeof(lexer_buffer_current));
-	memset(lexer_buffer_previous, 0, sizeof(lexer_buffer_previous));
+	 
 
-	FILE* input = fopen(testcaseFile, "r");
-	
-	char ch;
-
-	//Reinitialize the variables
-    current_line=1; file_over = 0;  forward_pointer = 0;  retract_twice=0;
-
-
-	
-	if(input==NULL){
-		fprintf(stderr,"Error Opening Source Code File\n");
-		return;
-	}
-
-	printf("\nOpening File for removing comments\n\n");
-
-	//Load Buffer initially
-	input = getStream(input);
-
-	//forward_pointer in the buffer
-	int i = 0; 
-	int eof = 0;
-
-	int emptyline = 1;
-
-	while(1){
-
-		//Refill the buffer 
-		if(lexer_buffer_current[i]=='\0'|| lexer_buffer_current[forward_pointer]==-1){
-			input = getStream(input);
-			if(input==NULL){
-				break;
-			}
-			i=0;
-		}		
-
-		//If comment encountered, ignore it
-		if(lexer_buffer_current[i]=='#'){
-			i++;
-			while(lexer_buffer_current[i]!='\n'){
-
-				//Refill the buffer if needed
-				if(lexer_buffer_current[i]=='\0'|| lexer_buffer_current[forward_pointer]==-1){
-					input = getStream(input);
-					if(input==NULL){
-						eof = 1;
-						break;
-					}
-					i= -1;
-				}
-				i++;
-			}
-		}
-
-		if(eof==1)
-			break;
-
-		if(lexer_buffer_current[i]!='\n')
-			emptyline = 0;
-
-		if(lexer_buffer_current[i]==-1)
-			break;
-
-		//Write character on the console 
-		if(!(emptyline==1 && lexer_buffer_current[i]=='\n')){
-			printf("%c",lexer_buffer_current[i]);			
-		}
-
-
-		if(lexer_buffer_current[i]=='\n')
-			emptyline = 1;
-
-
-		i++;
-	}
+		 
 
 	//Input file will always be closed by getStream function
-	if(input!=NULL)
-		fclose(input);
-
-	printf("\n\nFile Over\n");
-	
-}
+	 
 
 
 /***********************************************************************************************************************/
@@ -1545,7 +1454,7 @@ void printTokenList(char *input_code_file){
 	token = getNextToken(&file_ptr);
 	int i = 1;
 	while(token!=NULL){
-		if(token->valueType==-1)
+		if(token->valueType==-1)//
 			printf("Line Number: %-5d     Lexeme: %22s               Token Type: %15s\n",token->line_no, token->lexeme, tokenMap[token->type]);
 		if(token->valueType==0)
 			printf("Line Number: %-5d     Lexeme: %22s               Token Type: %15s\n",token->line_no, token->lexeme, tokenMap[token->type]);

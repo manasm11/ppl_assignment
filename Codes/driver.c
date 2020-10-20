@@ -78,8 +78,8 @@ int main(int argc, char* argv[]){
 	printf("-------Grammar loaded into the data structure-------\n\n");
 
 
-	FirstAndFollow* sets = ComputeFirstAndFollowSets(grm);
-	printf("-------First and Follow Sets Created-------\n\n");
+	//FirstAndFollow* sets = ComputeFirstAndFollowSets(grm);
+	//printf("-------First and Follow Sets Created-------\n\n");
 
 	ParsingTable* table = initialize_Table();
 	createParseTable(grm,sets,table);

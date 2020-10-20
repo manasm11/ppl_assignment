@@ -36,7 +36,7 @@ real SC,
   &&&,
   |||,
   |, 
-  =,// FIXME YE OPERATOR KON SA HAI ??? // wait i am understa
+  =,
   main,
   R1
 	 
