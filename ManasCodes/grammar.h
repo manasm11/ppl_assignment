@@ -15,12 +15,12 @@ typedef struct __grammar
 } Grammar;
 
 int pSymbol(Symbol *s) { printf("Str: %s, is_terminal: %s\n", s->str, s->is_terminal ? "true" : "false"); }
-int pSymbols(Symbol *head) { head &&pSymbol(head) && pSymbols(head->next); }
-int pGrammar(Grammar *g) { printf("LHS: ") && pSymbol(&(g->lhs)) && printf("RHS: ### BELOW ###\n") && pSymbols(g->rhs_head) && printf("\n"); }
+int pSymbols(Symbol *head) { head &&printf("\t") && pSymbol(head) && pSymbols(head->next); }
+int pGrammar(Grammar *g) { printf("LHS: ") && pSymbol(&(g->lhs)) && printf("RHS:\n") && pSymbols(g->rhs_head) && printf("\n"); }
 int pGrammars(Grammar head[NO_OF_GRAMMAR_RULES])
 {
     for (int i = 0; i < NO_OF_GRAMMAR_RULES; i++)
-        pGrammar(head + i);
+        pGrammar(head + i) || printf("------------------------------------------------------------------\n");
 }
 
 static void reverse(Symbol **head_ref)
