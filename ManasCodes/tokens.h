@@ -27,7 +27,7 @@ void add_token(Token **head_ref, int lno, int cno, char *str)
     /* 4. move the head to point to the new node */
     (*head_ref) = token;
 }
-static void reverse(Token **head_ref)
+static void reverse_tokens(Token **head_ref)
 {
     Token *prev = NULL;
     Token *current = *head_ref;

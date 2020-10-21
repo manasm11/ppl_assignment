@@ -2,11 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tokens.h"
-#define assert(condition, error_message) condition || printf("[-] ERROR: %s\n", error_message) && exitt(1)
-int exitt(int n) { exit(n); }
-char filename[] = "src_code.txt";
+#define assert(condition, error_message) !condition && printf("[-] ERROR: %s\n", error_message) ? exit(1) : 1
 Token *head = NULL;
-int main(int argc, char const *argv[])
+Token *initialize_token_stream(char filename[])
 {
     FILE *fp = fopen(filename, "r");
     assert(fp, "Code file not found");
@@ -19,7 +17,12 @@ int main(int argc, char const *argv[])
             add_token(&head, lno, ++cno, t);
         }
     }
-    reverse(&head);
-    pTokens(head);
-    return 0;
+    reverse_tokens(&head);
+    return head;
 }
+// int main(int argc, char const *argv[])
+// {
+//     initialize_token_stream("src_code.txt");
+//     pTokens(head);
+//     return 0;
+// }

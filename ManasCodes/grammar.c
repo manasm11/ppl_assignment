@@ -2,12 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "grammar.h"
-#define assert(condition, error_message) condition || printf("[-] %s\n\tERROR in file %s: line %d\n", error_message, __FILE__, __LINE__) && exitt(1)
+#define assert(condition, error_message) !(condition) && printf("[-] %s\n\tERROR in file %s: line %d\n", error_message, __FILE__, __LINE__) ? exit(1) : 1
 #define debug() printf("[*] RAN TILL File: %s, Line: %d\n", __FILE__, __LINE__)
-int exitt(int n) { exit(n); }
-char filename[] = "grammar.txt";
 Grammar grammars[NO_OF_GRAMMAR_RULES];
-int main(int argc, char const *argv[])
+int initialize_grammar(char filename[])
 {
     FILE *fp = fopen(filename, "r");
     assert(fp, "Grammar file not found");
@@ -40,7 +38,12 @@ int main(int argc, char const *argv[])
             grammars[lno].rhs_head = new_symbol;
             // printf("%s\n", t);
         }
-        reverse(&(grammars[lno].rhs_head));
+        reverse_grammar(&(grammars[lno].rhs_head));
     }
-    pGrammars(grammars);
 }
+// int main(int argc, char const *argv[])
+// {
+//     initialize_grammar("grammar.txt");
+//     pGrammars(grammars);
+//     return 0;
+// }

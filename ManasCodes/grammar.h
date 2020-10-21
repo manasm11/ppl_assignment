@@ -23,7 +23,7 @@ int pGrammars(Grammar head[NO_OF_GRAMMAR_RULES])
         pGrammar(head + i) || printf("------------------------------------------------------------------\n");
 }
 
-static void reverse(Symbol **head_ref)
+static void reverse_grammar(Symbol **head_ref)
 {
     Symbol *prev = NULL;
     Symbol *current = *head_ref;
