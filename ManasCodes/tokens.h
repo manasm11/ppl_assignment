@@ -7,16 +7,9 @@ typedef struct __token
     struct __token *next;
 } Token;
 
-int pToken(Token t) { printf("Line: %d, Column: %d, Token: %s\n", t.line, t.col, t.str); }
+int pToken(Token *t) { printf("Line: %d, Column: %d, Token: %s\n", t->line, t->col, t->str); }
 
-int pTokens(Token *head)
-{
-    if (head)
-    {
-        pTokens(head->next);
-        pToken(*head);
-    }
-}
+int pTokens(Token *head) { head &&pToken(head) && pTokens(head->next); }
 
 void add_token(Token **head_ref, int lno, int cno, char *str)
 {
@@ -34,7 +27,25 @@ void add_token(Token **head_ref, int lno, int cno, char *str)
     /* 4. move the head to point to the new node */
     (*head_ref) = token;
 }
+static void reverse(Token **head_ref)
+{
+    Token *prev = NULL;
+    Token *current = *head_ref;
+    Token *next = NULL;
+    while (current != NULL)
+    {
+        // Store next
+        next = current->next;
 
+        // Reverse current node's pointer
+        current->next = prev;
+
+        // Move pointers one position ahead.
+        prev = current;
+        current = next;
+    }
+    *head_ref = prev;
+}
 // void add_token(Token *head, Token *token)
 // {
 //     token->next = head;

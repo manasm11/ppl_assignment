@@ -19,9 +19,7 @@ int main(int argc, char const *argv[])
             add_token(&head, lno, ++cno, t);
         }
     }
+    reverse(&head);
     pTokens(head);
-    printf("\n");
-    pTokens(head);
-    // pTokens(&head);
     return 0;
 }

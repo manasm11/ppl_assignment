@@ -1,13 +1,12 @@
 #include <stdio.h>
-#define NO_OF_GRAMMAR_RULES 31
+#define NO_OF_GRAMMAR_RULES 47
 // <start> pro
 typedef struct __symbol
 {
     char str[16];
-    int terminal;
+    int is_terminal;
     struct __symbol *next;
 } Symbol;
-
 
 typedef struct __grammar
 {
@@ -15,5 +14,31 @@ typedef struct __grammar
     Symbol *rhs_head;
 } Grammar;
 
+int pSymbol(Symbol *s) { printf("Str: %s, is_terminal: %s\n", s->str, s->is_terminal ? "true" : "false"); }
+int pSymbols(Symbol *head) { head &&pSymbol(head) && pSymbols(head->next); }
+int pGrammar(Grammar *g) { printf("LHS: ") && pSymbol(&(g->lhs)) && printf("RHS: ### BELOW ###\n") && pSymbols(g->rhs_head) && printf("\n"); }
+int pGrammars(Grammar head[NO_OF_GRAMMAR_RULES])
+{
+    for (int i = 0; i < NO_OF_GRAMMAR_RULES; i++)
+        pGrammar(head + i);
+}
 
-// typedef Grammars[NO_OF_GRAMMAR_RULES] Grammar;
+static void reverse(Symbol **head_ref)
+{
+    Symbol *prev = NULL;
+    Symbol *current = *head_ref;
+    Symbol *next = NULL;
+    while (current != NULL)
+    {
+        // Store next
+        next = current->next;
+
+        // Reverse current node's pointer
+        current->next = prev;
+
+        // Move pointers one position ahead.
+        prev = current;
+        current = next;
+    }
+    *head_ref = prev;
+}

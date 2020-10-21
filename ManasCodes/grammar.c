@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "grammar.h"
-#define assert(condition, error_message) condition || printf("[-] ERROR: %s\n", error_message) && exitt(1)
+#define assert(condition, error_message) condition || printf("[-] %s\n\tERROR in file %s: line %d\n", error_message, __FILE__, __LINE__) && exitt(1)
+#define debug() printf("[*] RAN TILL File: %s, Line: %d\n", __FILE__, __LINE__)
 int exitt(int n) { exit(n); }
 char filename[] = "grammar.txt";
 Grammar grammars[NO_OF_GRAMMAR_RULES];
@@ -11,15 +12,35 @@ int main(int argc, char const *argv[])
     FILE *fp = fopen(filename, "r");
     assert(fp, "Grammar file not found");
     char *line = (char *)malloc(sizeof(char) * 128);
-    // int lno = 1, cno = 0;
-    int cno = 0;
-    for (size_t l; getline(&line, &l, fp) != -1; fflush(fp), cno = 0)
+    int lno = 0, cno = 0, is_first;
+    for (size_t l; getline(&line, &l, fp) != -1; fflush(fp), cno = 0, lno++)
     {
+        is_first = 1;
         for (char *t = strtok(line, " \n"); t; t = strtok(NULL, " \n"))
         {
-            if (++cno == 2)
+            assert(lno < NO_OF_GRAMMAR_RULES, "Change NO_OF_GRAMMAR_RULES according to grammar.txt");
+            Symbol *new_symbol = (Symbol *)malloc(sizeof(Symbol));
+            strcpy(new_symbol->str, t);
+            if (is_first)
+            {
+                is_first = 0;
+                new_symbol->is_terminal = 0;
+                new_symbol->next = NULL;
+                grammars[lno].lhs = *new_symbol;
+                grammars[lno].rhs_head = NULL;
+                // pSymbol(new_symbol);
                 continue;
-            printf("%s\n", t);
+            }
+
+            if (++cno == 1)
+                continue;
+
+            new_symbol->is_terminal = !(t[0] == '<');
+            new_symbol->next = grammars[lno].rhs_head;
+            grammars[lno].rhs_head = new_symbol;
+            // printf("%s\n", t);
         }
+        reverse(&(grammars[lno].rhs_head));
     }
+    pGrammars(grammars);
 }
