@@ -1,0 +1,78 @@
+Grammar
+
+E  :  TL, 
+L  :  +TL, Epsilon, 
+T  :  FK, 
+K  :  *FK, Epsilon, 
+F  :  i, (E), 
+
+
+
+
+First
+
+E  :  i, (, 
+L  :  +, Epsilon, 
+T  :  i, (, 
+K  :  *, Epsilon, 
+F  :  i, (, 
+
+
+
+
+Follow
+
+E  :  ), $, 
+L  :  ), $, 
+T  :  +, ), $, 
+K  :  +, ), $, 
+F  :  *, +, ), $, 
+
+
+
+
+							Parse Table
+
+
+				+		*		i		(		)		$		
+
+
+		E						E~TL		E~TL		Sync		Sync		
+
+		L		L~+TL								L~`		L~`		
+
+		T		Sync				T~FK		T~FK		Sync		Sync		
+
+		K		K~`		K~*FK						K~`		K~`		
+
+		F		Sync		Sync		F~i		F~(E)		Sync		Sync		
+
+
+
+
+
+
+
+
+							Parsing Expression
+
+
+			Matched			Stack			Input			Action
+
+			-			E$			i+i*i$			-
+			-			TL$			i+i*i$			E~TL
+			-			FKL$			i+i*i$			T~FK
+			-			iKL$			i+i*i$			F~i
+			i			KL$			+i*i$			Matched i
+			i			L$			+i*i$			K~`
+			i			+TL$			+i*i$			L~+TL
+			i+			TL$			i*i$			Matched +
+			i+			FKL$			i*i$			T~FK
+			i+			iKL$			i*i$			F~i
+			i+i			KL$			*i$			Matched i
+			i+i			*FKL$			*i$			K~*FK
+			i+i*			FKL$			i$			Matched *
+			i+i*			iKL$			i$			F~i
+			i+i*i			KL$			$			Matched i
+			i+i*i			L$			$			K~`
+			i+i*i			$			$			L~`

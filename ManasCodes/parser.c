@@ -57,11 +57,14 @@ int print_tree(Node *root)
     if (root->children && printf("%s\nV\n", root->data))
         print_tree(root->children);
 }
+Node *root;
 int main(int argc, char const *argv[])
 {
-    initialize_grammar("grammar.txt");
-    initialize_token_stream("src_code.txt");
+    initialize_grammar("grammar_test.txt");
+    initialize_token_stream("src_code_test.txt");
     // pGrammars(grammars);
-    pTokens(head);
+    // pTokens(head);
+    // create_parse_tree(grammars)
+    // root = 
     return 0;
 }
