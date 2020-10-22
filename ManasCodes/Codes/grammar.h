@@ -9,6 +9,10 @@ typedef struct __symbol
     char str[16];
     int is_terminal;
     struct __symbol *next;
+
+    // For Non-Terminal Symbols
+    struct __symbol *first;
+    struct __symbol *follow;
 } Symbol;
 
 typedef struct __grammar
@@ -45,3 +49,5 @@ static void reverse_grammar(Symbol **head_ref)
     }
     *head_ref = prev;
 }
+
+int symEqual(Symbol *s1, Symbol *s2) { return !(strcmp(s1->str, s2->str)); }

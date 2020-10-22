@@ -1,3 +1,8 @@
+typedef struct __parse_table
+{
+    
+} ParseTable;
+
 #pragma once
 #include <stdio.h>
 #include "grammar.c"
@@ -56,15 +61,4 @@ int print_tree(Node *root)
         print_tree(root->next);
     if (root->children && printf("%s\nV\n", root->data))
         print_tree(root->children);
-}
-Node *root;
-int main(int argc, char const *argv[])
-{
-    initialize_grammar("grammar_test.txt");
-    initialize_token_stream("src_code_test.txt");
-    // pGrammars(grammars);
-    // pTokens(head);
-    // create_parse_tree(grammars)
-    // root = 
-    return 0;
 }

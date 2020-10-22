@@ -30,19 +30,19 @@
 <assign_stmt> -> <arithmetic_expr> 
 <assign_stmt> -> <bool_expr> 
 <arithmetic_expr> -> <gen_var_name> = <expr1> SC
-<expr1> -> <expr1> + <term1>
-<expr1> -> <expr1> - <term1>
+<expr1> -> <term1> + <expr1>
+<expr1> -> <term1> - <expr1>
 <expr1> -> <term1>
-<term1> -> <term1> * <var>
-<term1> -> <term1> / <var>
+<term1> ->  <var> * <term1>
+<term1> -> <var> / <term1>
 <term1> -> <var>
 <bool_expr> -> var_name = <expr2> SC
-<expr2> -> <expr2> ||| <term2>
+<expr2> -> <term2> ||| <expr2>
 <expr2> -> <term2>
-<term2> -> <term2> &&& var_name
+<term2> -> var_name &&& <term2>
 <term2> -> var_name
 <var> -> <gen_var_name> 
 <var> -> num
-<gen_var_name> -> var_name 
 <var> -> var_name LSQ num <nex> RSQ
+<gen_var_name> -> var_name 
 
