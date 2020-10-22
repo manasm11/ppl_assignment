@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "grammar.h"
-#define assert(condition, error_message) !(condition) && printf("[-] %s\n\tERROR in file %s: line %d\n", error_message, __FILE__, __LINE__) ? exit(1) : void
+#define assert(condition, error_message) !(condition) && printf("[-] %s\n\tERROR in file %s: line %d\n", error_message, __FILE__, __LINE__) ? exitt(1) : 1
 #define debug() printf("[*] RAN TILL File: %s, Line: %d\n", __FILE__, __LINE__)
+int exitt(int n) { exit(n); }
 Grammar grammars[NO_OF_GRAMMAR_RULES];
 int initialize_grammar(char filename[])
 {
