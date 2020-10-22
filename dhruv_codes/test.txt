@@ -1,0 +1,2 @@
+declare v1 : integer ;
+u [ 2 5 ]  = v [ 3 4 ] + v1 ;
