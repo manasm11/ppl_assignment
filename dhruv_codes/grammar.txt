@@ -1,48 +1,47 @@
-<start> -> program RB LB RCB <gen_dec_block> <assign_block> LCB
-<gen_dec_block> -> <gen_dec> <gen_dec_block>
-<gen_dec_block> -> <gen_dec> 
-<assign_block> -> <assign_stmnt> <assign_block>
-<assign_block> -> <assign_stmnt> 
-<gen_dec> -> declare var_name COLON <type> 
-<gen_dec> -> declare list of variables <var_names> COLON <type>
-<var_names> -> var_name 
-<var_names> -> var_name <var_names>
-<type> -> integer SC 
-<type> -> real SC  
-<type> -> Boolean SC  
-<type> -> <Jagarr_type> 
-<type> -> <Rectarr_type>
-<Jagarr_type> -> jagged array <dims_J> of integer SC <populate>
-<dims_J> -> LSQ num..num RSQ LSQ RSQ <brackets>
-<brackets> -> LSQ RSQ 
-<brackets> -> e
-<populate> -> R1 LSQ num RSQ COLON size num COLON values <vals> <populate>
-<vals> -> LCB <val_ext>  num <nex> RCB  
-<nex> -> num <nex> 
-<nex> -> e 
-<val_ext> -> num <nex> SC <val_ext> 
-<val_ext> -> e
-<Rectarr_type> -> array <dims_R> of integer SC
-<dims_R> -> LSQ <var_Ind>..<var_Ind> RSQ 
-<dims_R> -> LSQ <var_Ind>..<var_Ind> RSQ <dims_R>
-<var_Ind> -> var_name 
-<var_Ind> -> num
-<assign_stmt> -> <arithmetic_expr> 
-<assign_stmt> -> <bool_expr> 
-<arithmetic_expr> -> <gen_var_name> = <expr1> SC
-<expr1> -> <term1> + <expr1>
-<expr1> -> <term1> - <expr1>
-<expr1> -> <term1>
-<term1> ->  <var> * <term1>
-<term1> -> <var> / <term1>
-<term1> -> <var>
-<bool_expr> -> var_name = <expr2> SC
-<expr2> -> <term2> ||| <expr2>
-<expr2> -> <term2>
-<term2> -> var_name &&& <term2>
-<term2> -> var_name
-<var> -> <gen_var_name> 
-<var> -> num
-<var> -> var_name LSQ num <nex> RSQ
-<gen_var_name> -> var_name 
-
+<start> ===> <gen_dec_block> <assign_block>
+<gen_dec_block> ===> <gen_dec> <gen_dec_block>
+<gen_dec_block> ===> <gen_dec> 
+<assign_block> ===> <assign_stmnt> <assign_block>
+<assign_block> ===> <assign_stmnt> 
+<gen_dec> ===> declare ID COLON <type> 
+<gen_dec> ===> declare list of variables <var_names> COLON <type>
+<var_names> ===> ID
+<var_names> ===> ID <var_names>
+<type> ===> integer SEMICOLON 
+<type> ===> real SEMICOLON  
+<type> ===> Boolean SEMICOLON
+<type> ===> <Jagarr_type> 
+<type> ===> <Rectarr_type>
+<Jagarr_type> ===> jagged array <dims_J> of integer SEMICOLON <populate>
+<dims_J> ===> SQO NUM DOT NUM SQC SQO SQC <brackets>
+<brackets> ===> SQO SQC 
+<brackets> ===> e
+<populate> ===> R1 SQO NUM SQC COLON size NUM COLON values <vals> <populate>
+<vals> ===> LCB <val_ext>  NUM <nex> RCB  
+<nex> ===> NUM <nex> 
+<nex> ===> e 
+<val_ext> ===> NUM <nex> SEMICOLON <val_ext> 
+<val_ext> ===> e
+<Rectarr_type> ===> array <dims_R> of integer SEMICOLON
+<dims_R> ===> SQO <var_Ind> DOT <var_Ind> SQC 
+<dims_R> ===> SQO <var_Ind> DOT <var_Ind> SQC <dims_R>
+<var_Ind> ===> ID 
+<var_Ind> ===> NUM
+<assign_stmnt> ===> <arithmetic_expr> 
+<assign_stmnt> ===> <bool_expr> 
+<arithmetic_expr> ===> <gen_var_name> ASSIGNOP <expr1> SEMICOLON
+<expr1> ===> <term1> PLUS <expr1>
+<expr1> ===> <term1> MINUS <expr1>
+<expr1> ===> <term1>
+<term1> ===>  <var> MUL <term1>
+<term1> ===> <var> DIV <term1>
+<term1> ===> <var>
+<bool_expr> ===> ID ASSIGNOP <expr2> SEMICOLON
+<expr2> ===> <term2> OR <expr2>
+<expr2> ===> <term2>
+<term2> ===> ID AND <term2>
+<term2> ===> ID
+<var> ===> <gen_var_name> 
+<var> ===> NUM
+<gen_var_name> ===> ID SQO NUM <nex> SQC
+<gen_var_name> ===> ID
