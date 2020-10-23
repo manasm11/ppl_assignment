@@ -7,7 +7,8 @@ typedef struct __token
     struct __token *next;
 } Token;
 
-int pToken(Token *t) { printf("Line: %d, Column: %d, Token: %s\n", t->line, t->col, t->str); }
+// int pToken(Token *t) { printf("Line: %d, Column: %d, Token: %s\n", t->line, t->col, t->str); }
+int pToken(Token *t) { printf("Token: %s\n", t->str); }
 
 int pTokens(Token *head) { head &&pToken(head) && pTokens(head->next); }
 

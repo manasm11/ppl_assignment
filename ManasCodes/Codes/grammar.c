@@ -39,12 +39,12 @@ int initialize_grammar(char filename[])
             grammars[lno].rhs_head = new_symbol;
             // printf("%s\n", t);
         }
-        reverse_grammar(&(grammars[lno].rhs_head));
+        // reverse_grammar(&(grammars[lno].rhs_head));
     }
 }
 // int main(int argc, char const *argv[])
 // {
-//     initialize_grammar("grammar.txt");
-//     pGrammars(grammars);
+    // initialize_grammar("grammar_test.txt");
+    // pGrammars(grammars);
 //     return 0;
 // }
