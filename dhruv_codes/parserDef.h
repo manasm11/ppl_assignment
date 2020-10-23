@@ -32,7 +32,7 @@ typedef Tokentype Terminal;
 
 
 typedef enum{
-	start,gen-dec_block,assign_block,gen-dec,var_names,type,Jagarr-type,dims_J,brackets,populate,vals,nex,val_ext,Rectarr-type,dims_R,var_Ind,assign_stmt,arithmetic_expr,expr1,term1,bool_expr,expr2,term2,var,gen_var_name
+	start,gen_dec_block,assign_block,gen_dec,var_names,type,Jagarr_type,dims_J,brackets,populate,vals,nex,val_ext,Rectarr_type,dims_R,var_Ind,assign_stmnt,arithmetic_expr,expr1,term1,bool_expr,expr2,term2,var,gen_var_name
 }NonTerminal;
 
 

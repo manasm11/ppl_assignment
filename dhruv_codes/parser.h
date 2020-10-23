@@ -47,7 +47,7 @@ FirstAndFollow* ComputeFirstAndFollowSets(Grammar* grm);
 void print_first_and_follow_sets(FirstAndFollow* sets);
 void print_set(int* set);
 void intitialize_sets(FirstAndFollow* sets);
-void compute_First(Grammar* grm, NonTerminal non_term, int** first);
+void compute_First(Grammar* grm, NonTerminal non_term, int** first,int i);
 int union_sets(int* set1, int* set2);
 void compute_Follow(Grammar* grm, FirstAndFollow* sets);
 int compute_Follow_Util(Grammar* grm, int** first, int** follow, int hasChanged);

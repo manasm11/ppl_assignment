@@ -21,13 +21,7 @@ Assume that sizeexp - @m can't be a part of an arithmetic expression but functio
 #include <ctype.h>
 #include <math.h>
 
-#include "codeGen.h"
-#include "optimizer.h"
-#include "intermediateCode.h"
-#include "typeExtractor.h"
-#include "semanticAnalyzer.h"
-#include "symbolTable.h"
-#include "ast.h"
+
 #include "parser.h"
 #include "Stack.h"
 #include "NaryTree.h"
@@ -37,6 +31,7 @@ Assume that sizeexp - @m can't be a part of an arithmetic expression but functio
 
 
 int main(int argc, char* argv[]){
+
 
 
 	char* grammar_file = "grammar.txt";
@@ -92,16 +87,14 @@ int main(int argc, char* argv[]){
 
 	ParseTree* tree;
 
-	AST* ast;
-
-	SymTableTree* symTableTree;
+	//SymTableTree* symTableTree;
 
 	int parsed = 0;
 	int syntax_errors = 0;
 	int ast_built = 0;
 	int semantic_errors = 0;
 
-	TupleList* tuples;
+	//TupleList* tuples;
 	
 	int exit_loop = 0;
 
@@ -162,130 +155,6 @@ int main(int argc, char* argv[]){
 					if(ch==1)
 						printParseTree(tree);				
 				}
-			}break;
-
-			case 3:{
-				if(parsed==0){
-					printf("\n\n------------------Parse Tree not Built yet: Select '2' First-----------------\n\n");
-				}
-				else{
-					if(syntax_errors==1){
-						printf("\n\nAST can't be constructed since the code has Syntax Errors\n\n");
-					}
-					else{
-						printf("\n\n----------------------------------Generating AST----------------------------------\n\n");
-						ast = generateAST(tree);
-						printf("\n\n-----------------------------------Printing AST (Node first, and then children)----------------------------------\n\n");
-						printAST(ast);
-						printf("\n\n----------------------------AST Printed in Preorder Fashion (Node first, and then children)----------------------------\n\n");
-
-						ast_built = 1;
-					}
-				}
-			}break;
-
-			case 4:{
-				if(ast_built==0){
-					printf("\n\n---------------------AST not Built yet: Select '3' First-------------------\n\n");
-				}
-				else{
-					print_compression_ratio(tree, ast);
-				}
-			}break;
-
-
-			case 5:{
-				if(ast_built==0){
-					printf("\n\n---------------------AST not Built yet, so Symbol Table can't be constructed: Select '3' First-------------------\n\n");
-				}
-				else{
-					//Initialize Error List
-					ErrorList* errors = initialize_errors();
-
-					//Building Symbol Table
-					SymTableTree* symtree = buildAllSymbolTables(ast,errors);
-
-					//So that offsets can be set
-					semantic_analyzer(ast,errors,symtree);
-
-					//Printing Symbol Table Tree
-					printSymbolTableTree(symtree);
-
-				}
-			}break;
-
-			case 6:{
-				syntax_errors = 0;
-				semantic_errors = 0;
-				tree = parseInputSourceCode("test.txt",table,&syntax_errors);	
-
-				if(tree==NULL){
-					printf("\n\nParse Tree Not Built yet: Wrong File Name Passed\n\n");
-				}
-				else{
-					if(syntax_errors==1){
-						printf("\n\n------------------------Syntax Errors Reported-----------------------\n\n");
-					}
-					else{
-						printf("\n\n---------------------------Semantic Analysis Begins---------------------------\n\n");
-						ast = generateAST(tree);
-						ErrorList* errors = initialize_errors();
-						SymTableTree* symtree = buildAllSymbolTables(ast,errors);
-						semantic_analyzer(ast,errors,symtree);
-
-						if(errors->head!=NULL){
-							semantic_errors = 1;
-							print_errors(errors);
-							printf("\n\n------------------------Semantic Errors Reported -------------------------\n\n");
-
-						}
-						else{
-							printf("\n\n------------------No syntax or semantic errors----------------\n\n");
-						}
-					}
-				}
-
-			}break;
-
-			case 7:{
-
-				syntax_errors = 0;
-				semantic_errors = 0;
-				tree = parseInputSourceCode("test.txt",table,&syntax_errors);	
-
-				if(tree==NULL){
-					printf("\n\nParse Tree Not Built yet: Wrong File Name Passed\n\n");
-				}
-				else{
-					if(syntax_errors==1){
-						printf("\n\n------------------------Syntax Errors Reported : Unsuccessful Compilation-----------------------\n\n");
-					}
-					else{
-						printf("\n\n---------------------------Semantic Analysis Begins---------------------------\n\n");
-						ast = generateAST(tree);
-						ErrorList* errors = initialize_errors();
-						SymTableTree* symtree = buildAllSymbolTables(ast,errors);
-						semantic_analyzer(ast,errors,symtree);
-
-						if(errors->head!=NULL){
-							semantic_errors = 1;
-							print_errors(errors);
-
-							printf("\n\n------------------------Semantic Errors Reported : Unsuccessful Compilation-----------------------\n\n");
-
-						}
-						else{
-							//Code Generation
-							printf("\n\n------------------Compilation Successful----------------\n");
-							tuples = generateIR(ast);
-
-							printf("\n\n------------------Generating Final Code----------------\n");
-							generate_code(tuples,"test.txt");
-							printf("\n\n-------------------ASM Code Generated----------------\n");
-						}
-					}
-				}
-
 			}break;
 
 		}

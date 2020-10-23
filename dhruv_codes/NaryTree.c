@@ -23,7 +23,7 @@ ParseTree* initialize_tree(){
 
 void add_root(ParseTree* tree){
 	//Create starting nonterminal as the root of the tree
-	tree->root = create_node(1,mainFunction,NULL);
+	tree->root = create_node(1,start,NULL);
 	
 }
 

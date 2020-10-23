@@ -44,12 +44,12 @@ ID: 2015A7PS0076P
 
 //Mappings of ENUM to String
 char* TerminalMap[] = {
-	"ASSIGNOP","COMMENT","FUNID","NUM","RNUM","STR","END","INT","STRING","MATRIX","MAIN","OP","CL","COMMA","IF","ELSE","ENDIF","READ","PRINT","FUNCTION","NOT","LT","LE","EQ","GT","GE","NE","$","ERROR",  "LABEL", "GOTO","declare","ID", "COLON","list","of", "variables","integer","SC",
-"real","Boolean","jagged", "array","LSQ","DOT","RSQ","R1","size","values","LCB","RCB","PLUS","MINUS","MUL","DIV","AND","OR","e"
+	"ASSIGNOP","COMMENT","FUNID","NUM","RNUM","STR","END","INT","STRING","MATRIX","MAIN","OP","CL","COMMA","IF","ELSE","ENDIF","READ","PRINT","FUNCTION","NOT","LT","LE","EQ","GT","GE","NE","$","ERROR",  "LABEL", "GOTO","declare","ID", "COLON","list","of", "variables","integer","SEMICOLON",
+"real","Boolean","jagged", "array","SQO","DOT","SQC","R1","size","values","LCB","RCB","PLUS","MINUS","MUL","DIV","AND","OR","e"
 };
 
 char* NonTerminalMap[] = {
-	"start","gen-dec_block","assign_block","gen-dec","var_names","type","Jagarr-type","dims_J","brackets","populate","vals","nex","val_ext","Rectarr-type","dims_R","var_Ind","assign_stmt","arithmetic_expr","expr1","term1","bool_expr","expr2","term2","var","gen_var_name"};
+	"start","gen_dec_block","assign_block","gen_dec","var_names","type","Jagarr_type","dims_J","brackets","populate","vals","nex","val_ext","Rectarr_type","dims_R","var_Ind","assign_stmnt","arithmetic_expr","expr1","term1","bool_expr","expr2","term2","var","gen_var_name"};
 
 
 
@@ -133,13 +133,13 @@ Grammar* load_grammar_from_text_file(char* grammar_text_file){
 				break;
 			}
 
-			else if(ch>='A'&&ch<='Z' || ch=='e'){
+			else if(ch>='A'&&ch<='Z' || (ch>='a' && ch<='z') || ch=='e' || ch=='1'){
 				
 				char* term_str = (char*)malloc(sizeof(char)*MAX_SYMBOL_SIZE);
 				int i = 0;
 				term_str[i++] = ch;
 				ch = fgetc(input);
-				while(ch>='A'&&ch<='Z'){
+				while((ch>='A'&&ch<='Z') || (ch>='a' && ch<='z')|| ch=='1'){
 					term_str[i++] = ch;
 					ch = fgetc(input);
 				}
@@ -361,7 +361,7 @@ FirstAndFollow* ComputeFirstAndFollowSets(Grammar* grm){
 
 	//Computer First Sets
 	for(int i=0;i<TOTAL_NON_TERMINALS;i++){
-		compute_First(grm,(NonTerminal)i, sets->first);		
+		compute_First(grm,(NonTerminal)i, sets->first,i);		
 	}
 
 	//Compute Follow Sets
@@ -419,7 +419,7 @@ void intitialize_sets(FirstAndFollow* sets){
 }
 
 
-void compute_First(Grammar* grm, NonTerminal non_term, int** first){
+void compute_First(Grammar* grm, NonTerminal non_term, int** first,int i){
 
 	Rules* rules = grm->rules[non_term];
 
@@ -441,7 +441,7 @@ void compute_First(Grammar* grm, NonTerminal non_term, int** first){
 			}
 
 			else{
-				compute_First(grm, temp2->type.nonterminal,first);
+				compute_First(grm, temp2->type.nonterminal,first,i);
 
 				//if e not in first of the nonterminal
 				int whetherChanged = union_sets(first[non_term], first[temp2->type.nonterminal]);
@@ -485,7 +485,7 @@ int union_sets(int* set1, int* set2){
 
 void compute_Follow(Grammar* grm, FirstAndFollow* sets){
 	
-	addToSet(sets->follow[mainFunction],DOLLAR);
+	addToSet(sets->follow[start],DOLLAR);
 	int whetherChanged = 1;
 	while(whetherChanged==1){
 		whetherChanged = 0;

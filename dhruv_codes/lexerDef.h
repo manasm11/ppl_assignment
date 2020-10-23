@@ -14,7 +14,7 @@ ID: 2015A7PS0076P
 #include <stdlib.h>
 
 
-#define total_token_types 45
+#define total_token_types 58
 
 //IMPORTANT
 

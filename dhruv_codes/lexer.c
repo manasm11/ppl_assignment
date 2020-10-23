@@ -1576,8 +1576,3 @@ void printTokenList(char *input_code_file){
 		fclose(file_ptr);	
 	}
 
-int main(int argc, char const *argv[])
-{
-	printTokenList("test.txt");
-	return 0;
-}
