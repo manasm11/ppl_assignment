@@ -1,4 +1,13 @@
-<S> -> s <A> <B>
-<A> -> c <A>
-<A> -> c
-<B> -> b
+<start> -> program ( ) { <stmt_list> }
+<stmt_list> -> <stmt> <stmt_list>
+<stmt_list> -> <stmt>
+<stmt> -> <declarative>
+<declarative> -> declare list of variables <name> : <type> ;
+<name> -> <id> <name>
+<name> -> <id>
+<id> -> a1
+<id> -> a2
+<id> -> b1
+<id> -> b2
+<type> -> integer
+<type> -> boolean

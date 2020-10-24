@@ -257,6 +257,7 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                     return 1;
                 }
                 // for (int i = 0; i < temp_global_nodes.top + 1; i++)
+                parent->children = NULL;
                 for (int i = temp_global_nodes.top; i > -1; i--)
                 {
                     global_nodes.nodes[i] = temp_global_nodes.nodes[i];
@@ -287,12 +288,18 @@ static void reverse(Node **head_ref)
     *head_ref = prev;
 }
 
+// root->children
+
 void reverse_children(Node **head_ref)
 {
+    // printf("[*] Reversing ") && print_tree(*head_ref);
     if (*head_ref)
     {
         reverse(&(*head_ref)->children);
-        reverse_children(&(*head_ref)->children);
+        for (Node *n = (*head_ref)->children; n; n = n->next)
+        {
+            reverse_children(&n);
+        }
     }
 }
 
@@ -303,7 +310,7 @@ int main(int argc, char const *argv[])
     initialize_token_stream("src_code_test.txt");
     // pTokens(head);
     Stack stack;
-    strcpy(stack.stack[0].str, "<S>");
+    strcpy(stack.stack[0].str, "<start>");
     stack.stack[0].is_terminal = 0;
     stack.top = 0;
 
@@ -311,7 +318,7 @@ int main(int argc, char const *argv[])
     global_nodes.top = 0;
 
     stack.stack[0].node = root;
-    strcpy(stack.stack[0].str, "<S>");
+    strcpy(stack.stack[0].str, "<start>");
     stack.stack[0].is_terminal = 0;
     stack.top = 0;
 

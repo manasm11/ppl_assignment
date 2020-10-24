@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define NO_OF_GRAMMAR_RULES 4
+#define NO_OF_GRAMMAR_RULES 13
 // #define NO_OF_TERMINALS 3
 // #define NO_OF_NON_TERMINALS 2
 // #define NO_OF_GRAMMAR_RULES 47
