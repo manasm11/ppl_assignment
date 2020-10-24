@@ -19,6 +19,9 @@ typedef struct __symbol
     int is_terminal;
     struct __symbol *next;
     Type type;
+    int grammar_rule_no;
+    int line_no;
+    int depth;
     Node *node;
 } Symbol;
 
@@ -26,6 +29,8 @@ int copy_symbol(Symbol *dest, Symbol *src)
 {
     dest->is_terminal = src->is_terminal;
     dest->next = src->next;
+    dest->line_no = src->line_no;
+    dest->grammar_rule_no = src->grammar_rule_no;
     strcpy(dest->str, src->str);
 }
 
@@ -84,10 +89,13 @@ int print_tree(Node *root)
 {
     if (!root)
         return 0;
-    printf("%s\n", root->data.str);
+    printf("CHILDREN OF: %s\n\t", root->data.str);
+    root->children || printf("NONE!!");
     for (Node *child = root->children; child; child = child->next)
     {
-        printf("%s -> ", child->data.str);
+        // printf("%s, %d, \t", child->data.str, child->data.is_terminal ? child->data.line_no : -1);
+        // printf("%s, %d\t", child->data.str, child->data.is_terminal ? -1 : child->data.grammar_rule_no);
+        printf("%s, %d\t", child->data.str, child->data.depth);
     }
     printf("\n");
     // for (Node *node = root; node; node = node->next)
@@ -142,3 +150,17 @@ static void reverse_grammar(Symbol **head_ref)
     *head_ref = prev;
 }
 int symEqual(Symbol *s1, Symbol *s2) { return !(strcmp(s1->str, s2->str)); }
+int get_depth(Node *node, int depth)
+{
+    if (!node)
+        return 0;
+    // static int depth = 0;
+    depth++;
+    node->data.depth = depth;
+    for (Node *n = node->children; n; n=n->next)
+    {
+        pSymbol(&n->data);
+        get_depth(n, depth);
+    }
+    return 1;
+}

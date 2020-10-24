@@ -91,13 +91,13 @@ void push(Stack *s, Symbol sym)
     strcpy(s->stack[s->top].str, sym.str);
     s->stack[s->top].node = nodeNew(s->stack[s->top]);
 }
-
 int parse(Grammar grammars[], Token *head, Stack stack)
 {
     if (!head)
         return 1;
     if (stack.stack[stack.top].is_terminal)
     {
+        global_nodes.nodes[global_nodes.top]->data.line_no = head->line;
         int is_id = !strcmp(stack.stack[stack.top].str, "id");
         // if(is_id){}
         // printf("[*] stack[top].str = %s\n[*] is_id = %d\n", stack.stack[stack.top].str, is_id);
@@ -131,6 +131,7 @@ int parse(Grammar grammars[], Token *head, Stack stack)
             Stack_Of_Nodes temp_global_nodes;
             if (!strcmp(grammars[i].lhs.str, stack.stack[stack.top].str))
             {
+                global_nodes.nodes[global_nodes.top]->data.grammar_rule_no = i;
                 Stack temp;
                 Stack temp2;
                 temp2.top = -1;
@@ -155,7 +156,9 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                     Node *child_node = nodeNew(temp2.stack[i]);
                     add_child(parent, child_node);
                     global_nodes.nodes[++global_nodes.top] = child_node;
+                    // global_nodes.nodes[global_nodes.top-1]->data.depth = depth;
                 }
+
                 if (parse(grammars, head, temp))
                 {
                     return 1;
@@ -228,6 +231,7 @@ int main(int argc, char const *argv[])
     // print_tree(root);
     reverse_children(&root);
     // printf("---------------------------------------------------\n");
+    get_depth(root, -1);
     print_tree(root);
     return 0;
 }
