@@ -1,15 +1,24 @@
 #include <stdio.h>
-#define NO_OF_GRAMMAR_RULES 13
+#define NO_OF_GRAMMAR_RULES 10
 // #define NO_OF_TERMINALS 3
 // #define NO_OF_NON_TERMINALS 2
 // #define NO_OF_GRAMMAR_RULES 47
 // <start> pro
 typedef struct Node Node;
+typedef enum __type
+{
+    KEYWORD,
+    ID,
+    INT,
+    FLOAT
+} Type;
+
 typedef struct __symbol
 {
     char str[16];
     int is_terminal;
     struct __symbol *next;
+    Type type;
     Node *node;
 } Symbol;
 

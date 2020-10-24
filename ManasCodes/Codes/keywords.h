@@ -1,0 +1,13 @@
+"program",
+"(",
+")",
+"{",
+"}",
+"declare",
+"list",
+"of",
+"variables",
+":",
+";",
+"integer",
+"boolean"
