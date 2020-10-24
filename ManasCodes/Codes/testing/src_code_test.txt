@@ -1,0 +1,2 @@
+program ( ) 
+declare a b

@@ -77,16 +77,6 @@ typedef struct __parse_table
 // }
 
 Node *root;
-Node *current;
-
-typedef struct __st_nodes
-{
-    int top;
-    Node *nodes[256];
-
-} Stack_Of_Nodes;
-
-Stack_Of_Nodes global_nodes;
 
 typedef struct __stack
 {
@@ -94,7 +84,7 @@ typedef struct __stack
     Symbol stack[256];
 } Stack;
 
-Stack global_stack[256];
+Stack global[16];
 int global_count = 0;
 void copy_stack(Stack *dest, Stack *src)
 {
@@ -114,7 +104,7 @@ void copy_stack(Stack *dest, Stack *src)
 int print_stack(Stack s)
 {
     // printf("%s\n", s.called_from.str);
-    for (int i = 0; i < s.top + 1; i++)
+    for (int i = s.top; i > -1; i--)
     {
         pSymbol(&s.stack[i]);
     }
@@ -128,23 +118,13 @@ Symbol pop(Stack *s)
     }
 }
 
-int print_global_nodes(Stack_Of_Nodes s)
-{
-    printf("PRINTING GLOBAL STACK\n");
-    for (int i = 0; i < s.top + 1; i++)
-    {
-        printf("%s ", s.nodes[i]->data.str);
-    }
-    printf("\n");
-}
-
 void push(Stack *s, Symbol sym)
 {
     s->top++;
     s->stack[s->top].is_terminal = sym.is_terminal;
     s->stack[s->top].next = sym.next;
     strcpy(s->stack[s->top].str, sym.str);
-    s->stack[s->top].node = nodeNew(s->stack[s->top]);
+    s->stack[s->top].node = nodeNew(&s->stack[s->top]);
 }
 
 int parse(Grammar grammars[], Token *head, Stack stack)
@@ -154,12 +134,6 @@ int parse(Grammar grammars[], Token *head, Stack stack)
         return 1;
     // debug("PARSING HEAD ") && pToken(head);
     // debug("PARSING STACK\n") && print_stack(stack);
-    // for (int i = 0; i < global_nodes.top + 1; i++)
-    // {
-    //     printf("%s ", global_nodes.nodes[i]->data.str);
-    // }
-    // printf("\n");
-    // print_stack()
     // debug("TERMINAL: ") && printf("head: %s, top: %s\n", head->str, stack.stack[stack.top].str);
     if (stack.stack[stack.top].is_terminal)
     {
@@ -169,7 +143,6 @@ int parse(Grammar grammars[], Token *head, Stack stack)
             // debug("JAI HIND !!!\n");
             // pToken(head);
             stack.top--;
-            global_nodes.top--;
             head = head->next;
             return parse(grammars, head, stack);
         }
@@ -180,10 +153,9 @@ int parse(Grammar grammars[], Token *head, Stack stack)
     }
     else
     {
-        Node *terminal = nodeNew(stack.stack[stack.top]);
+        Node *terminal = nodeNew(&stack.stack[stack.top]);
         for (int i = 0; i < NO_OF_GRAMMAR_RULES; i++)
         {
-            Stack_Of_Nodes temp_global_nodes;
             // delete_node(pparent);
             if (!strcmp(grammars[i].lhs.str, stack.stack[stack.top].str))
             {
@@ -199,53 +171,16 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                 // printf("AFTER POPING ");
                 // print_stack(temp);
                 // TO ADD EXPANDED FORM IN TEMP STACK.
-                pop(&temp);
                 for (Symbol *s = grammars[i].rhs_head; s != NULL; s = s->next)
                 {
                     push(&temp, *s);
                     push(&temp2, *s);
                     // pSymbol(&temp.stack[temp.top]);
                 }
-                // temp_global_nodes is for backup in case the grammar expansion is incorrect
-                for (int i = 0; i < global_nodes.top + 1; i++)
+                for (int i = 0; i < temp2.top; i++)
                 {
-                    temp_global_nodes.nodes[i] = global_nodes.nodes[i];
+                    add_child(terminal, temp2.stack[i].node);
                 }
-                temp_global_nodes.top = global_nodes.top;
-
-                // print_global_nodes(global_nodes);
-                Node *parent = global_nodes.nodes[global_nodes.top--];
-                // print_global_nodes(global_nodes);
-                // global_nodes.top--;
-                // global_nodes.top--;
-                // for (int i = 0; i < global_nodes.top;)
-                // print_stack(temp2);
-                // for (int i = 0, t = global_nodes.top + 1; i < temp2.top + 1; i++, t++)
-                // Stack_Of_Nodes temp3;
-                // temp3.top = -1;
-                // copy_stack(temp3,)
-                // for (int i = temp2.top, t = global_nodes.top + temp2.top+1; i > -1; i--, t--)
-                // global_nodes.top > 0 ? global_nodes.top-- : 1;
-                // global_nodes.top--;
-                for (int i = 0; i < temp2.top + 1; i++)
-                {
-                    // printf("ADDING CHILD: ") && pSymbol(&temp2.stack[i]) && printf("\n");
-                    copy_symbol(&temp2.stack[i].node->data, &temp2.stack[i]);
-                    Node *child_node = nodeNew(temp2.stack[i]);
-                    add_child(parent, child_node);
-                    // global_nodes.nodes[t] = nodeNew(temp2.stack[i]);
-                    global_nodes.nodes[++global_nodes.top] = child_node;
-                    // add_child(parent2, global_nodes.nodes[t]);
-                    // global_nodes.top++;
-                }
-                // printf("[**]AFTER FOR\n") && print_global_nodes(global_nodes);
-                // for (int i = temp3.top; i > -1; i--)
-                // {
-                //     global_nodes.nodes[++global_nodes.top] = temp3.nodes[i];
-                // }
-                // print_tree(global_nodes.nodes[0]);
-                // print_tree(root);
-                // print_tree(parent->node);
                 // debug("AFTER PUSHING ") && print_stack(temp);
                 // print_stack(stack);
                 if (parse(grammars, head, temp))
@@ -256,43 +191,9 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                     // printf("\n");
                     return 1;
                 }
-                // for (int i = 0; i < temp_global_nodes.top + 1; i++)
-                for (int i = temp_global_nodes.top; i > -1; i--)
-                {
-                    global_nodes.nodes[i] = temp_global_nodes.nodes[i];
-                }
-                global_nodes.top = temp_global_nodes.top;
             }
         }
         return 0;
-    }
-}
-static void reverse(Node **head_ref)
-{
-    struct Node *prev = NULL;
-    struct Node *current = *head_ref;
-    struct Node *next = NULL;
-    while (current != NULL)
-    {
-        // Store next
-        next = current->next;
-
-        // Reverse current node's pointer
-        current->next = prev;
-
-        // Move pointers one position ahead.
-        prev = current;
-        current = next;
-    }
-    *head_ref = prev;
-}
-
-void reverse_children(Node **head_ref)
-{
-    if (*head_ref)
-    {
-        reverse(&(*head_ref)->children);
-        reverse_children(&(*head_ref)->children);
     }
 }
 
@@ -303,30 +204,15 @@ int main(int argc, char const *argv[])
     initialize_token_stream("src_code_test.txt");
     // pTokens(head);
     Stack stack;
-    strcpy(stack.stack[0].str, "<S>");
+    strcpy(stack.stack[0].str, "<start>");
     stack.stack[0].is_terminal = 0;
     stack.top = 0;
-
-    global_nodes.nodes[0] = nodeNew(stack.stack[0]);
-    global_nodes.top = 0;
-
+    root = nodeNew(&stack.stack[0]);
     stack.stack[0].node = root;
-    strcpy(stack.stack[0].str, "<S>");
-    stack.stack[0].is_terminal = 0;
-    stack.top = 0;
-
-    root = nodeNew(stack.stack[0]);
-    stack.stack[0].node = root;
-    global_nodes.nodes[0] = root;
     int val = parse(grammars, head, stack);
-    val ? debug("SUCCUSS\n") : debug("UNSUCCESSFUL\n");
+    val ? debug("SUCCUSEES\n") : debug("UNSUCCESSFUL\n");
     // for (int i = global_count; global_count > -1; global_count--)
-    //     print_stack(global[i]);nt val = parse(grammars, head, stack);
-    print_tree(root);
-    reverse_children(&root);
-    printf("---------------------------------------------------\n");
+    //     print_stack(global[i]);
     print_tree(root);
     return 0;
 }
-
-// <S> s<A><B> a b

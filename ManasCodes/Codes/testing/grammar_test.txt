@@ -1,0 +1,2 @@
+<start> -> program ( ) <something>
+<something> -> declare a b

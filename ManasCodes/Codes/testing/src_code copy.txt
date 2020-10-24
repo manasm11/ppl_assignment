@@ -1,0 +1,4 @@
+declare v1 : integer ;
+declare list of variables a1 a2 : integer ;
+declare list of variables b1 b2 b3 : boolean ;
+declare list of variables c1 c2 : real ;
