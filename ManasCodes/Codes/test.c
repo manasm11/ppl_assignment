@@ -250,7 +250,7 @@ void reverse_children(Node **head_ref)
 
 int main(int argc, char const *argv[])
 {
-    initialize_grammar("grammar copy.txt");
+    initialize_grammar("grammar_copy_ki_copy.txt");
     // pGrammars(grammars);
     initialize_token_stream("src_code_test.txt");
     // pTokens(head);
