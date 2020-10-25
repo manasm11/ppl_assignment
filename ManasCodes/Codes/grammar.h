@@ -1,9 +1,11 @@
 #include <stdio.h>
 #define NO_OF_GRAMMAR_RULES 100
+#include "colors.h"
 // #define NO_OF_TERMINALS 3
 // #define NO_OF_NON_TERMINALS 2
 // #define NO_OF_GRAMMAR_RULES 47
 // <start> pro
+#define assert(condition, error_message) condition || RED &&printf("[-] %s !!!\n", error_message) && CLEAR_COLORS
 #include "colors.h"
 #define NEWLINE printf("\n")
 typedef struct Node Node;
@@ -17,7 +19,7 @@ typedef enum __type
 
 typedef struct __symbol
 {
-    char str[16];
+    char str[32];
     int is_terminal;
     struct __symbol *next;
     Type type;
@@ -51,7 +53,10 @@ Node *nodeNew(Symbol data)
 
     n = (Node *)malloc(sizeof(Node));
     if (!n)
+    {
+        assert(n, "NODE NOT CREATED !!!");
         return n;
+    }
     copy_symbol(&(n->data), &data);
     n->next = NULL;
     n->prev = NULL;
@@ -111,7 +116,7 @@ int print_tree(Node *root)
         strcpy(sym_name, root->data.str);
     }
 
-    printf("%-20s %-10d %-10s %-10s", sym_name, root->data.depth, root->data.is_terminal?"TRUE":"FALSE", root->data.is_terminal?root->data.str:"***") && NEWLINE;
+    printf("%-20s %-10d %-10s %-10s", sym_name, root->data.depth, root->data.is_terminal ? "TRUE" : "FALSE", root->data.is_terminal ? root->data.str : "***") && NEWLINE;
     // printf("[⭐] %s\n\t", root->data.str);
     // printf("CHILDREN OF: %s\n\t", root->data.str);
     // root->children || printf("**");

@@ -1,6 +1,7 @@
 #include "grammar.c"
 #include "tokenizer.c"
 #include <ctype.h>
+#define STACK_SIZE 1024
 #define debug(message) printf("[*] %s", message)
 #define NO_OF_KEYWORDS 13
 int is_keyword(char *str)
@@ -32,7 +33,7 @@ Node *current;
 typedef struct __st_nodes
 {
     int top;
-    Node *nodes[256];
+    Node *nodes[STACK_SIZE];
 
 } Stack_Of_Nodes;
 
@@ -41,10 +42,10 @@ Stack_Of_Nodes global_nodes;
 typedef struct __stack
 {
     int top;
-    Symbol stack[256];
+    Symbol stack[STACK_SIZE];
 } Stack;
 
-Stack global_stack[256];
+Stack global_stack[STACK_SIZE];
 int global_count = 0;
 void copy_stack(Stack *dest, Stack *src)
 {
