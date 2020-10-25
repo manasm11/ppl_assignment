@@ -4,6 +4,8 @@
 // #define NO_OF_NON_TERMINALS 2
 // #define NO_OF_GRAMMAR_RULES 47
 // <start> pro
+#include "colors.h"
+#define NEWLINE printf("\n")
 typedef struct Node Node;
 typedef enum __type
 {
@@ -87,19 +89,40 @@ Node *add_child(Node *parent, Node *node)
 
 int print_tree(Node *root)
 {
+    static int first = 1;
+    if (first)
+    {
+        first = 0;
+        BOLD_YELLOW &&printf("%-20s %-10s %-10s %-10s", "SYMBOL NAME", "DEPTH", "TERMINAL", "LEXEME") && CLEAR_COLORS &&NEWLINE;
+    }
     if (!root)
         return 0;
-    printf("[⭐] %s\n\t", root->data.str);
-    // printf("CHILDREN OF: %s\n\t", root->data.str);
-    root->children || printf("**");
-    for (Node *child = root->children; child; child = child->next)
+    char sym_name[16];
+    if (root->data.type == ID)
     {
-        // printf("%s, %d, \t", child->data.str, child->data.is_terminal ? child->data.line_no : -1);
-        // printf("%s, %d\t", child->data.str, child->data.is_terminal ? -1 : child->data.grammar_rule_no);
-        // printf("%s, %d\t", child->data.str, child->data.depth);
-        printf("%s  ", child->data.str);
+        strcpy(sym_name, "id");
     }
-    printf("\n");
+    else if (root->data.type == INT)
+    {
+        strcpy(sym_name, "num");
+    }
+    else
+    {
+        strcpy(sym_name, root->data.str);
+    }
+
+    printf("%-20s %-10d %-10s %-10s", sym_name, root->data.depth, root->data.is_terminal?"TRUE":"FALSE", root->data.is_terminal?root->data.str:"***") && NEWLINE;
+    // printf("[⭐] %s\n\t", root->data.str);
+    // printf("CHILDREN OF: %s\n\t", root->data.str);
+    // root->children || printf("**");
+    // for (Node *child = root->children; child; child = child->next)
+    // {
+    //     // printf("%s, %d, \t", child->data.str, child->data.is_terminal ? child->data.line_no : -1);
+    //     // printf("%s, %d\t", child->data.str, child->data.is_terminal ? -1 : child->data.grammar_rule_no);
+    //     // printf("%s, %d\t", child->data.str, child->data.depth);
+    //     // printf("%s  ", child->data.str);
+    // }
+    // printf("\n");
     // for (Node *node = root; node; node = node->next)
     // {
     //     printf("%s -> ", node->data.str);
@@ -159,9 +182,9 @@ int get_depth(Node *node, int depth)
     // static int depth = 0;
     depth++;
     node->data.depth = depth;
-    for (Node *n = node->children; n; n=n->next)
+    for (Node *n = node->children; n; n = n->next)
     {
-        pSymbol(&n->data);
+        // pSymbol(&n->data);
         get_depth(n, depth);
     }
     return 1;

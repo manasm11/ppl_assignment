@@ -97,9 +97,7 @@ int parse(Grammar grammars[], Token *head, Stack stack)
     if (!head)
         return 1;
     debug("PARSING HEAD ") && pToken(head);
-    // reverse_tokens(&stack.stack);
     debug("PARSING STACK\n") && print_stack(stack);
-    // reverse_tokens(&stack.stack);
     // for (int i = 0; i < global_nodes.top + 1; i++)
     // {
     //     printf("%s ", global_nodes.nodes[i]->data.str);
@@ -117,6 +115,12 @@ int parse(Grammar grammars[], Token *head, Stack stack)
         {
             // FIXME Will except numbers with first character as digit.
             // Eg: 1ab is a num
+            // if (!strcmp(stack.stack[stack.top].str, "e"))
+            // {
+            //     stack.top--;
+            //     global_nodes.top--;
+            //     return parse(grammars, head, stack);
+            // }
             if (is_num && isdigit(head->str[0]))
             {
                 strcpy(global_nodes.nodes[global_nodes.top]->data.str, head->str);
@@ -272,6 +276,12 @@ int main(int argc, char const *argv[])
     reverse_children(&root);
     // printf("---------------------------------------------------\n");
     get_depth(root, -1);
+
+    BOLD_BLUE;
+    printf("\n*******************************");
+    printf("\n***** PRINTING PARSE TREE *****");
+    printf("\n*******************************\n\033[0m");
+    CLEAR_COLORS;
     print_tree(root);
     return 0;
 }

@@ -1,4 +1,6 @@
 program ( ) {
     declare a : integer ;
-    a = 2 ;
+    declare list of variables s1 s2 : jagged array [ 3 .. 8 ] [ ] of integer ;
+    R1 [ 3 ] : size 3 : values { 20 ; 35 ; 54 }
+    a = 4 ;
 }

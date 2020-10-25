@@ -14,30 +14,34 @@
 <type> -> <Rectarr_type>
 <Jagarr_type> -> jagged array <dims_J> of integer ; <populate>
 <dims_J> -> [ num .. num ] [ ] <brackets>
-<brackets> -> [ ] <brackets>
-<brackets> -> [ ]
-<populate> -> R1 [ num ] : size num : values <vals> 
-<vals> -> { <val_ext> <nex> }
+<brackets> -> [ ] 
+<brackets> -> e
+<populate> -> R1 [ num ] : size num : values <vals> <populate>
+<vals> -> { <val_ext>  num <nex> }
 <nex> -> num <nex> 
-<nex> -> num
-<val_ext> -> <nex> ; <val_ext> 
-<val_ext> -> <nex> ;
+<nex> -> e 
+<val_ext> -> num <nex> ; <val_ext> 
+<val_ext> -> e
 <Rectarr_type> -> array <dims_R> of integer ;
 <dims_R> -> [ <var_Ind> .. <var_Ind> ] 
 <dims_R> -> [ <var_Ind> .. <var_Ind> ] <dims_R>
 <var_Ind> -> id 
 <var_Ind> -> num
 <assign_stmnt> -> <arithmetic_expr> 
-<arithmetic_expr> -> <var> = <expr1> ;
+<assign_stmnt> -> <bool_expr> 
+<arithmetic_expr> -> <gen_id> = <expr1> ;
 <expr1> -> <term1>
 <expr1> -> <term1> + <expr1>
 <expr1> -> <term1> - <expr1>
-<expr1> -> <term1> ||| <expr1>
 <term1> -> <var>
 <term1> -> <var> * <term1>
 <term1> -> <var> / <term1>
-<term1> -> <var> &&& <term1>
+<bool_expr> -> id = <expr2> ;
+<expr2> -> <term2> ||| <expr2>
+<expr2> -> <term2>
+<term2> -> id
+<term2> -> id &&& <term2>
 <var> -> num
 <gen_id> -> id 
-<var> -> id [ <nex> ]
+<var> -> id [ num <nex> ]
 <var> -> <gen_id> 
