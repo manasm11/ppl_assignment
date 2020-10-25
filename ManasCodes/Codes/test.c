@@ -1,5 +1,6 @@
 #include "grammar.c"
 #include "tokenizer.c"
+#include <ctype.h>
 #define debug(message) printf("[*] %s", message)
 #define NO_OF_KEYWORDS 13
 int is_keyword(char *str)
@@ -95,21 +96,58 @@ int parse(Grammar grammars[], Token *head, Stack stack)
 {
     if (!head)
         return 1;
+    debug("PARSING HEAD ") && pToken(head);
+    // reverse_tokens(&stack.stack);
+    debug("PARSING STACK\n") && print_stack(stack);
+    // reverse_tokens(&stack.stack);
+    // for (int i = 0; i < global_nodes.top + 1; i++)
+    // {
+    //     printf("%s ", global_nodes.nodes[i]->data.str);
+    // }
+    // printf("\n");
     if (stack.stack[stack.top].is_terminal)
     {
         global_nodes.nodes[global_nodes.top]->data.line_no = head->line;
         int is_id = !strcmp(stack.stack[stack.top].str, "id");
+        int is_num = !strcmp(stack.stack[stack.top].str, "num");
         // if(is_id){}
         // printf("[*] stack[top].str = %s\n[*] is_id = %d\n", stack.stack[stack.top].str, is_id);
-        if (is_id && !is_keyword(head->str))
+        // Checking if it is an identifier
+        if (!is_keyword(head->str))
         {
-            strcpy(global_nodes.nodes[global_nodes.top]->data.str, head->str);
-            stack.top--;
-            global_nodes.top--;
-            head = head->next;
-            // printf("HEAD = %s\n", head->str);
-            return parse(grammars, head, stack);
+            // FIXME Will except numbers with first character as digit.
+            // Eg: 1ab is a num
+            if (is_num && isdigit(head->str[0]))
+            {
+                strcpy(global_nodes.nodes[global_nodes.top]->data.str, head->str);
+                global_nodes.nodes[global_nodes.top]->data.type = INT;
+                stack.top--;
+                global_nodes.top--;
+                head = head->next;
+                // printf("HEAD = %s\n", head->str);
+                return parse(grammars, head, stack);
+            }
+            if (is_id && !isdigit(head->str[0]))
+            {
+                strcpy(global_nodes.nodes[global_nodes.top]->data.str, head->str);
+                global_nodes.nodes[global_nodes.top]->data.type = ID;
+                stack.top--;
+                global_nodes.top--;
+                head = head->next;
+                // printf("HEAD = %s\n", head->str);
+                return parse(grammars, head, stack);
+            }
+            // printf("[-] ERROR in line: %d\n", head->line);
         }
+        // if (is_id && !is_keyword(head->str))
+        // {
+        //     strcpy(global_nodes.nodes[global_nodes.top]->data.str, head->str);
+        //     stack.top--;
+        //     global_nodes.top--;
+        //     head = head->next;
+        //     // printf("HEAD = %s\n", head->str);
+        //     return parse(grammars, head, stack);
+        // }
         if (!strcmp(head->str, stack.stack[stack.top].str))
         {
             stack.top--;
@@ -208,8 +246,10 @@ void reverse_children(Node **head_ref)
 
 int main(int argc, char const *argv[])
 {
-    initialize_grammar("grammar_test.txt");
+    initialize_grammar("grammar copy.txt");
+    // pGrammars(grammars);
     initialize_token_stream("src_code_test.txt");
+    // pTokens(head);
     Stack stack;
     strcpy(stack.stack[0].str, "<start>");
     stack.stack[0].is_terminal = 0;

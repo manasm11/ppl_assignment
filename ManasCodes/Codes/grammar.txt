@@ -27,8 +27,8 @@
 <dims_R> -> LSQ <var_Ind>..<var_Ind> RSQ <dims_R>
 <var_Ind> -> var_name 
 <var_Ind> -> num
-<assign_stmt> -> <arithmetic_expr> 
-<assign_stmt> -> <bool_expr> 
+<assign_stmnt> -> <arithmetic_expr> 
+<assign_stmnt> -> <bool_expr> 
 <arithmetic_expr> -> <gen_var_name> = <expr1> SC
 <expr1> -> <term1> + <expr1>
 <expr1> -> <term1> - <expr1>
@@ -45,4 +45,3 @@
 <var> -> num
 <var> -> var_name LSQ num <nex> RSQ
 <gen_var_name> -> var_name 
-

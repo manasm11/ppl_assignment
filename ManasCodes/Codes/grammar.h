@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define NO_OF_GRAMMAR_RULES 10
+#define NO_OF_GRAMMAR_RULES 47
 // #define NO_OF_TERMINALS 3
 // #define NO_OF_NON_TERMINALS 2
 // #define NO_OF_GRAMMAR_RULES 47
@@ -10,7 +10,7 @@ typedef enum __type
     KEYWORD,
     ID,
     INT,
-    FLOAT
+    REAL
 } Type;
 
 typedef struct __symbol
@@ -89,13 +89,15 @@ int print_tree(Node *root)
 {
     if (!root)
         return 0;
-    printf("CHILDREN OF: %s\n\t", root->data.str);
-    root->children || printf("NONE!!");
+    printf("[⭐] %s\n\t", root->data.str);
+    // printf("CHILDREN OF: %s\n\t", root->data.str);
+    root->children || printf("**");
     for (Node *child = root->children; child; child = child->next)
     {
         // printf("%s, %d, \t", child->data.str, child->data.is_terminal ? child->data.line_no : -1);
         // printf("%s, %d\t", child->data.str, child->data.is_terminal ? -1 : child->data.grammar_rule_no);
-        printf("%s, %d\t", child->data.str, child->data.depth);
+        // printf("%s, %d\t", child->data.str, child->data.depth);
+        printf("%s  ", child->data.str);
     }
     printf("\n");
     // for (Node *node = root; node; node = node->next)
@@ -127,7 +129,7 @@ int pGrammar(Grammar *g) { printf("LHS: ") && pSymbol(&(g->lhs)) && printf("RHS:
 int pGrammars(Grammar head[NO_OF_GRAMMAR_RULES])
 {
     for (int i = 0; i < NO_OF_GRAMMAR_RULES; i++)
-        pGrammar(head + i) || printf("------------------------------------------------------------------\n");
+        pGrammar(head + i) || printf("\n------------------------------------------------------------------\n");
 }
 
 static void reverse_grammar(Symbol **head_ref)

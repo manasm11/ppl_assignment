@@ -1,3 +1,4 @@
-program ( ) { 
-    declare list of variables a1 a2 : integer ;
+program ( ) {
+    declare a : integer ;
+    a = 2 ;
 }

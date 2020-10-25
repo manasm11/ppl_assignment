@@ -2,8 +2,10 @@
 <stmt_list> -> <stmt> <stmt_list>
 <stmt_list> -> <stmt>
 <stmt> -> <declarative>
+<stmt> -> <assignment>
 <declarative> -> declare <id> : <type> ;
 <declarative> -> declare list of variables <name> : <type> ;
+<assignment> -> id = num ;
 <name> -> id
 <name> -> id <name>
 <type> -> integer
