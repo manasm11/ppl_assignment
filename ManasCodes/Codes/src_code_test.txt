@@ -1,5 +1,6 @@
 program ( ) {
-    declare list of variables s1 s2 : jagged array [ 3 .. 8 ] [ ] of integer ;
-    R1 [ 3 ] : size 3 : values { 20 ; 35 ; 54 }
-    R1 [ 4 ] : size 6 : values { 65 ; 89 ; 99 ; 11 ; 37 ; 11 }
+    declare s : integer ;
+    declare a : Boolean ;
+    declare a1 : array [ 23 .. 43 ] of integer ;
+    a = 3 ;
 }

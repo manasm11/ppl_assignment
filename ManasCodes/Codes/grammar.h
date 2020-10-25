@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define NO_OF_GRAMMAR_RULES 100
+#define NO_OF_GRAMMAR_RULES 49
 #include "colors.h"
 // #define NO_OF_TERMINALS 3
 // #define NO_OF_NON_TERMINALS 2
@@ -14,15 +14,27 @@ typedef enum __type
     KEYWORD,
     ID,
     INT,
-    REAL
+    REAL,
 } Type;
+
+typedef enum __id_type
+{
+    INTEGER_ID,
+    REAL_ID,
+    BOOL_ID,
+    RECT_ARR_ID,
+    JAGGED_ARR_ID
+} Id_type;
 
 typedef struct __symbol
 {
     char str[32];
     int is_terminal;
     struct __symbol *next;
+    int is_static;
+    char dimensions[16];
     Type type;
+    Id_type id_type;
     int grammar_rule_no;
     int line_no;
     int depth;
@@ -35,6 +47,9 @@ int copy_symbol(Symbol *dest, Symbol *src)
     dest->next = src->next;
     dest->line_no = src->line_no;
     dest->grammar_rule_no = src->grammar_rule_no;
+    dest->id_type = src->id_type;
+    dest->depth = src->depth;
+    dest->is_static = src->is_static;
     strcpy(dest->str, src->str);
 }
 
@@ -95,6 +110,7 @@ Node *add_child(Node *parent, Node *node)
 int print_tree(Node *root)
 {
     static int first = 1;
+    static int count = 1;
     if (first)
     {
         first = 0;
@@ -116,7 +132,7 @@ int print_tree(Node *root)
         strcpy(sym_name, root->data.str);
     }
 
-    printf("%-20s %-10d %-10s %-10s", sym_name, root->data.depth, root->data.is_terminal ? "TRUE" : "FALSE", root->data.is_terminal ? root->data.str : "***") && NEWLINE;
+    printf("%d.%-20s %-10d %-10s %-10s", count++, sym_name, root->data.depth, root->data.is_terminal ? "TRUE" : "FALSE", root->data.is_terminal ? root->data.str : "***") && NEWLINE;
     // printf("[⭐] %s\n\t", root->data.str);
     // printf("CHILDREN OF: %s\n\t", root->data.str);
     // root->children || printf("**");

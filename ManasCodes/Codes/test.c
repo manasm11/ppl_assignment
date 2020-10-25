@@ -1,9 +1,10 @@
 #include "grammar.c"
 #include "tokenizer.c"
 #include <ctype.h>
-#define STACK_SIZE 1024
+#define STACK_SIZE 256
 #define debug(message) printf("[*] %s", message)
 #define NO_OF_KEYWORDS 13
+#define elif else if
 int is_keyword(char *str)
 {
     char *keywords[NO_OF_KEYWORDS] = {
@@ -38,6 +39,7 @@ typedef struct __st_nodes
 } Stack_Of_Nodes;
 
 Stack_Of_Nodes global_nodes;
+Stack_Of_Nodes type_nodes;
 
 typedef struct __stack
 {
@@ -45,8 +47,7 @@ typedef struct __stack
     Symbol stack[STACK_SIZE];
 } Stack;
 
-Stack global_stack[STACK_SIZE];
-int global_count = 0;
+// Stack global_stack[STACK_SIZE];
 void copy_stack(Stack *dest, Stack *src)
 {
     for (int i = 0; i < src->top + 1; i++)
@@ -97,8 +98,8 @@ int parse(Grammar grammars[], Token *head, Stack stack)
 {
     if (!head)
         return 1;
-    debug("PARSING HEAD ") && pToken(head);
-    debug("PARSING STACK\n") && print_stack(stack);
+    // debug("PARSING HEAD ") && pToken(head);
+    // debug("PARSING STACK\n") && print_stack(stack);
     // for (int i = 0; i < global_nodes.top + 1; i++)
     // {
     //     printf("%s ", global_nodes.nodes[i]->data.str);
@@ -134,13 +135,70 @@ int parse(Grammar grammars[], Token *head, Stack stack)
             }
             if (is_id && !isdigit(head->str[0]))
             {
+                Token *temp = head;
+                Node *temp_ref = global_nodes.nodes[global_nodes.top];
                 strcpy(global_nodes.nodes[global_nodes.top]->data.str, head->str);
                 global_nodes.nodes[global_nodes.top]->data.type = ID;
                 stack.top--;
                 global_nodes.top--;
                 head = head->next;
                 // printf("HEAD = %s\n", head->str);
-                return parse(grammars, head, stack);
+                if (parse(grammars, head, stack))
+                {
+                    int count = 5;
+                    while (temp && strcmp(temp->str, ":") && count--)
+                        temp = temp->next;
+                    if (!temp)
+                        return 1;
+                    if (strcmp(temp->str, ":"))
+                        return 1;
+                    temp = temp->next;
+                    if (!temp)
+                        return 1;
+                    // printf("%s\n", temp->str);
+                    // pTokens(temp);
+                    if (!strcmp(temp->str, "integer"))
+                    {
+
+                        // printf("is_type = %d\n", temp_ref->data.id_type);
+                        temp_ref->data.id_type = INTEGER_ID;
+                        type_nodes.nodes[++type_nodes.top] = temp_ref;
+                    }
+                    elif (!strcmp(temp->str, "Boolean"))
+                    {
+                        // printf("is_type = %d\n", temp_ref->data.id_type);
+                        temp_ref->data.id_type = BOOL_ID;
+                        type_nodes.nodes[++type_nodes.top] = temp_ref;
+                    }
+                    elif (!strcmp(temp->str, "real"))
+                    {
+                        // printf("is_type = %d\n", temp_ref->data.id_type);
+                        temp_ref->data.id_type = REAL_ID;
+                        type_nodes.nodes[++type_nodes.top] = temp_ref;
+                    }
+                    elif (!strcmp(temp->str, "jagged"))
+                    {
+                        // printf("is_type = %d\n", temp_ref->data.id_type);
+                        temp_ref->data.id_type = JAGGED_ARR_ID;
+                        type_nodes.nodes[++type_nodes.top] = temp_ref;
+                    }
+                    elif (!strcmp(temp->str, "array"))
+                    {
+                        // printf("is_type = %d\n", temp_ref->data.id_type);
+                        temp_ref->data.id_type = RECT_ARR_ID;
+                        if (isdigit(temp->next->next->str[0]))
+                        {
+                            temp_ref->data.is_static = 1;
+                        }
+                        else
+                        {
+                            temp_ref->data.is_static = 0;
+                        }
+                        type_nodes.nodes[++type_nodes.top] = temp_ref;
+                    }
+                    // printf("HELLO !!!\n");
+                    return 1;
+                }
             }
             // printf("[-] ERROR in line: %d\n", head->line);
         }
@@ -249,6 +307,15 @@ void reverse_children(Node **head_ref)
     }
 }
 
+void print_type_nodes(Stack_Of_Nodes s)
+{
+    // printf("Size of s.top = %d", s.top);
+    for (int i = 0; i < s.top + 1; i++)
+    {
+        printf("%s, %d, %d\n", s.nodes[i]->data.str, s.nodes[i]->data.id_type, s.nodes[i]->data.is_static);
+    }
+}
+
 int main(int argc, char const *argv[])
 {
     initialize_grammar("grammar_copy_ki_copy.txt");
@@ -262,6 +329,7 @@ int main(int argc, char const *argv[])
 
     global_nodes.nodes[0] = nodeNew(stack.stack[0]);
     global_nodes.top = 0;
+    type_nodes.top = -1;
 
     stack.stack[0].node = root;
     strcpy(stack.stack[0].str, "<start>");
@@ -279,10 +347,12 @@ int main(int argc, char const *argv[])
     get_depth(root, -1);
 
     BOLD_BLUE;
-    printf("\n*******************************");
-    printf("\n***** PRINTING PARSE TREE *****");
-    printf("\n*******************************\n\033[0m");
+    // printf("\n*******************************");
+    // printf("\n***** PRINTING PARSE TREE *****");
+    // printf("\n*******************************\n\033[0m");
     CLEAR_COLORS;
-    print_tree(root);
+    // print_tree(root);
+    // print_stack(type_nodes);
+    print_type_nodes(type_nodes);
     return 0;
 }
