@@ -12,7 +12,7 @@ Token *initialize_token_stream(char filename[])
     int lno = 1, cno = 0;
     for (size_t l; getline(&line, &l, fp) != -1; fflush(fp), cno = 0, lno++)
     {
-        for (char *t = strtok(line, " \n"); t; t = strtok(NULL, " \n"))
+        for (char *t = strtok(line, " \n\t"); t; t = strtok(NULL, " \n\t"))
         {
             add_token(&head, lno, ++cno, t);
         }

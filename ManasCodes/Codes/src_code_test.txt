@@ -1,8 +1,9 @@
-program ( ) {
-    declare a : array [ 4 .. 5 ] [ 5 .. 9 ] of integer ;
-    declare a : array [ 4 .. 5 ] [ 5 .. 9 ] of integer ;
-    declare a : array [ 4 .. 5 ] [ 5 .. 9 ] of integer ;
-    declare a : array [ 4 .. 5 ] [ 5 .. 9 ] of integer ;
-    declare a : array [ 4 .. 5 ] [ 5 .. 9 ] of integer ;
-    a = 3 ;
+program ( )
+{
+	declare list of variables new d w e2 : integer ;
+	declare v1 : integer ;
+ 	declare list of variables a1 a2 : integer ;
+	declare list of variables b1 b2 b3 : boolean ;	             
+	c1 = a1 * a2 ; 
+	m1 = m2 + a1 ;                 	
 }

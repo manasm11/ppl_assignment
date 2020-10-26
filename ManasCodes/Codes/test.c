@@ -371,7 +371,7 @@ int main(int argc, char const *argv[])
 {
     initialize_grammar("grammar_copy_ki_copy.txt");
     // pGrammars(grammars);
-    initialize_token_stream("/home/laozi/Manas/LIFE/MONEY/Acads/CS Courses/PPL/ppl_assignment/ManasCodes/Codes/test_cases/testcases/t1.txt");
+    initialize_token_stream("src_code_test.txt");
     // pTokens(head);
     Stack stack;
     strcpy(stack.stack[0].str, "<start>");

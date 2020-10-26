@@ -16,7 +16,6 @@
 "Boolean",
 "jagged",
 "array",
-"e",
 "R1",
 "size",
 "values",
