@@ -1,6 +1,8 @@
 program ( ) {
-    declare s : integer ;
-    declare a : Boolean ;
-    declare a1 : array [ 23 .. 43 ] of integer ;
+    declare a : array [ 4 .. 5 ] [ 5 .. 9 ] of integer ;
+    declare a : array [ 4 .. 5 ] [ 5 .. 9 ] of integer ;
+    declare a : array [ 4 .. 5 ] [ 5 .. 9 ] of integer ;
+    declare a : array [ 4 .. 5 ] [ 5 .. 9 ] of integer ;
+    declare a : array [ 4 .. 5 ] [ 5 .. 9 ] of integer ;
     a = 3 ;
 }

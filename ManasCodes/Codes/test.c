@@ -1,9 +1,10 @@
 #include "grammar.c"
 #include "tokenizer.c"
 #include <ctype.h>
-#define STACK_SIZE 256
+#define STACK_SIZE 32
 #define debug(message) printf("[*] %s", message)
 #define NO_OF_KEYWORDS 13
+#define NO_OF_PRINTING_COLUMNS 100
 #define elif else if
 int is_keyword(char *str)
 {
@@ -180,6 +181,18 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                     {
                         // printf("is_type = %d\n", temp_ref->data.id_type);
                         temp_ref->data.id_type = JAGGED_ARR_ID;
+                        temp = temp->next->next;
+                        // printf("HEALLO \n");
+                        // pToken(temp);
+                        while (strcmp(temp->str, "of"))
+                        {
+                            strcat(temp_ref->data.dimensions, temp->str);
+                            strcat(temp_ref->data.dimensions, " ");
+                            // pToken(temp);
+                            temp = temp->next;
+                        }
+                        // printf(temp_ref->data.dimensions);
+                        // NEWLINE;
                         type_nodes.nodes[++type_nodes.top] = temp_ref;
                     }
                     elif (!strcmp(temp->str, "array"))
@@ -194,6 +207,20 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                         {
                             temp_ref->data.is_static = 0;
                         }
+                        temp = temp->next;
+                        // printf("HEALLO \n");
+                        // pToken(temp);
+                        // printf("%d\n", temp_ref->data.id_type);
+                        while (strcmp(temp->str, "of"))
+                        {
+                            strcat(temp_ref->data.dimensions, temp->str);
+                            strcat(temp_ref->data.dimensions, " ");
+                            // pToken(temp);
+                            temp = temp->next;
+                        }
+                        // printf("%d\n", temp_ref->data.id_type);
+                        // printf("%s\n", temp_ref->data.dimensions);
+                        NEWLINE;
                         type_nodes.nodes[++type_nodes.top] = temp_ref;
                     }
                     // printf("HELLO !!!\n");
@@ -307,9 +334,33 @@ void reverse_children(Node **head_ref)
     }
 }
 
+int print_heading(char heading[])
+{
+    // char *heading = "PRINTING TYPE EXPRESSION TABLE";
+    BOLD_MAGENTA;
+    for (int i = 0; i < NO_OF_PRINTING_COLUMNS; i++)
+        printf("*");
+    NEWLINE;
+    for (int i = 0; i < (NO_OF_PRINTING_COLUMNS - strlen(heading)) / 2 - 1; i++)
+    {
+        printf("*");
+    }
+    printf(" %s ", heading);
+    for (int i = 0; i < (NO_OF_PRINTING_COLUMNS - strlen(heading)) / 2 - 1; i++)
+    {
+        printf("*");
+    }
+    NEWLINE;
+    for (int i = 0; i < NO_OF_PRINTING_COLUMNS; i++)
+        printf("*");
+    NEWLINE;
+    CLEAR_COLORS;
+}
+
 void print_type_nodes(Stack_Of_Nodes s)
 {
     // printf("Size of s.top = %d", s.top);
+    print_heading("PRINTING TYPE EXPRESSION TABLE");
     for (int i = 0; i < s.top + 1; i++)
     {
         printf("%s, %d, %d\n", s.nodes[i]->data.str, s.nodes[i]->data.id_type, s.nodes[i]->data.is_static);
@@ -320,7 +371,7 @@ int main(int argc, char const *argv[])
 {
     initialize_grammar("grammar_copy_ki_copy.txt");
     // pGrammars(grammars);
-    initialize_token_stream("src_code_test.txt");
+    initialize_token_stream("/home/laozi/Manas/LIFE/MONEY/Acads/CS Courses/PPL/ppl_assignment/ManasCodes/Codes/test_cases/testcases/t1.txt");
     // pTokens(head);
     Stack stack;
     strcpy(stack.stack[0].str, "<start>");
