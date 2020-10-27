@@ -1,12 +1,7 @@
-<start> -> program ( ) { <stmt_list> }
-<stmt_list> -> <stmt> <stmt_list>
-<stmt_list> -> <stmt>
-<stmt> -> <declarative>
-<stmt> -> <assignment>
-<declarative> -> declare <id> : <type> ;
-<declarative> -> declare list of variables <name> : <type> ;
-<assignment> -> id = num ;
-<name> -> id
-<name> -> id <name>
-<type> -> integer
-<type> -> boolean
+<start> -> a <B> <C>
+<B> -> z
+<B> -> <J>
+<J> -> <P> <C> b
+<P> -> z
+<B> -> b
+<C> -> c

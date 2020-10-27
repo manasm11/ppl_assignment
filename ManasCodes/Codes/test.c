@@ -1,7 +1,7 @@
 #include "grammar.c"
 #include "tokenizer.c"
 #include <ctype.h>
-#define STACK_SIZE 32
+#define STACK_SIZE 1024
 #define debug(message) printf("[*] %s", message)
 #define NO_OF_KEYWORDS 13
 #define NO_OF_PRINTING_COLUMNS 100
@@ -30,23 +30,33 @@ typedef struct __parse_table
 #include <stdio.h>
 
 Node *root;
-Node *current;
 
 typedef struct __st_nodes
 {
     int top;
-    Node *nodes[STACK_SIZE];
+    Node **nodes;
 
 } Stack_Of_Nodes;
 
 Stack_Of_Nodes global_nodes;
 Stack_Of_Nodes type_nodes;
 
+void initialise_stack_of_nodes(Stack_Of_Nodes *s)
+{
+    s->nodes = (Node **)malloc(sizeof(Node *) * STACK_SIZE);
+    printf("NODES IS INITIALISED !!!\n");
+}
+
 typedef struct __stack
 {
     int top;
-    Symbol stack[STACK_SIZE];
+    Symbol *stack;
 } Stack;
+
+void initialise_stack(Stack *s)
+{
+    s->stack = (Symbol *)malloc(sizeof(Symbol) * STACK_SIZE);
+}
 
 // Stack global_stack[STACK_SIZE];
 void copy_stack(Stack *dest, Stack *src)
@@ -85,6 +95,25 @@ int print_global_nodes(Stack_Of_Nodes s)
         printf("%s ", s.nodes[i]->data.str);
     }
     printf("\n");
+}
+
+int free_children(Node *parent)
+{
+    if (!parent)
+        return -1;
+    Node *child = parent->children;
+    // printf("PRIND %s\n", child->data.str);
+    while (child)
+    {
+        printf("FREEING %s\n", child->data.str);
+        printf("HEALO !!!\n");
+        Node *next = child->next;
+        free_children(child);
+        child = next;
+    }
+    if (parent)
+        free(parent);
+    return 0;
 }
 
 void push(Stack *s, Symbol sym)
@@ -257,11 +286,14 @@ int parse(Grammar grammars[], Token *head, Stack stack)
         for (int i = 0; i < NO_OF_GRAMMAR_RULES; i++)
         {
             Stack_Of_Nodes temp_global_nodes;
+            initialise_stack_of_nodes(&temp_global_nodes);
             if (!strcmp(grammars[i].lhs.str, stack.stack[stack.top].str))
             {
                 global_nodes.nodes[global_nodes.top]->data.grammar_rule_no = i;
                 Stack temp;
+                initialise_stack(&temp);
                 Stack temp2;
+                initialise_stack(&temp2);
                 temp2.top = -1;
                 temp.top = -1;
                 copy_stack(&temp, &stack);
@@ -291,12 +323,17 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                 {
                     return 1;
                 }
-                parent->children = NULL;
                 for (int i = temp_global_nodes.top; i > -1; i--)
                 {
                     global_nodes.nodes[i] = temp_global_nodes.nodes[i];
                 }
                 global_nodes.top = temp_global_nodes.top;
+                for (Node *t = parent->children; t; t = t->next)
+                {
+                    // printf("JIA MANAT DI %s\n", t->data.str);
+                    free_children(t);
+                }
+                parent->children = NULL;
             }
         }
         return 0;
@@ -363,22 +400,28 @@ void print_type_nodes(Stack_Of_Nodes s)
     print_heading("PRINTING TYPE EXPRESSION TABLE");
     for (int i = 0; i < s.top + 1; i++)
     {
-        printf("%s, %d, %d\n", s.nodes[i]->data.str, s.nodes[i]->data.id_type, s.nodes[i]->data.is_static);
+        printf("%s, %d, %d, %s\n", s.nodes[i]->data.str, s.nodes[i]->data.id_type, s.nodes[i]->data.is_static, s.nodes[i]->data.dimensions);
     }
 }
 
 int main(int argc, char const *argv[])
 {
+    // initialize_grammar("grammar_test.txt");
     initialize_grammar("grammar_copy_ki_copy.txt");
     // pGrammars(grammars);
+    // initialize_token_stream("src_code.txt");
     initialize_token_stream("src_code_test.txt");
     // pTokens(head);
     Stack stack;
+    initialise_stack(&stack);
+    initialise_stack_of_nodes(&global_nodes);
+    initialise_stack_of_nodes(&type_nodes);
     strcpy(stack.stack[0].str, "<start>");
     stack.stack[0].is_terminal = 0;
     stack.top = 0;
-
-    global_nodes.nodes[0] = nodeNew(stack.stack[0]);
+    Node *n = nodeNew(stack.stack[0]);
+    global_nodes.nodes[0] = n;
+    printf("NEW GLOBAL NODES ACESSED !!!\n");
     global_nodes.top = 0;
     type_nodes.top = -1;
 
@@ -403,7 +446,6 @@ int main(int argc, char const *argv[])
     // printf("\n*******************************\n\033[0m");
     CLEAR_COLORS;
     // print_tree(root);
-    // print_stack(type_nodes);
     print_type_nodes(type_nodes);
     return 0;
 }

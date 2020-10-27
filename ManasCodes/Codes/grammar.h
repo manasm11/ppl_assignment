@@ -69,7 +69,7 @@ Node *nodeNew(Symbol data)
     n = (Node *)malloc(sizeof(Node));
     if (!n)
     {
-        assert(n, "NODE NOT CREATED !!!");
+        // assert(n, "NODE NOT CREATED !!!");
         return n;
     }
     copy_symbol(&(n->data), &data);
@@ -133,32 +133,29 @@ int print_tree(Node *root)
     }
 
     printf("%d.%-20s %-10d %-10s %-10s", count++, sym_name, root->data.depth, root->data.is_terminal ? "TRUE" : "FALSE", root->data.is_terminal ? root->data.str : "***") && NEWLINE;
-    // printf("[⭐] %s\n\t", root->data.str);
-    // printf("CHILDREN OF: %s\n\t", root->data.str);
-    // root->children || printf("**");
-    // for (Node *child = root->children; child; child = child->next)
-    // {
-    //     // printf("%s, %d, \t", child->data.str, child->data.is_terminal ? child->data.line_no : -1);
-    //     // printf("%s, %d\t", child->data.str, child->data.is_terminal ? -1 : child->data.grammar_rule_no);
-    //     // printf("%s, %d\t", child->data.str, child->data.depth);
-    //     // printf("%s  ", child->data.str);
-    // }
-    // printf("\n");
-    // for (Node *node = root; node; node = node->next)
-    // {
-    //     printf("%s -> ", node->data.str);
-    // }
-    // printf("\n");
     for (Node *child = root->children; child; child = child->next)
     {
         print_tree(child);
     }
 }
-//     if (root->next && printf("%s > ", root->data.str))
-//         print_tree(root->next);
-//     if (root->children && printf("%s\nV\n", root->data.str))
-//         print_tree(root->children);
-// }
+
+int type_checking(Node *root)
+{
+    static int first = 1;
+    static int count = 1;
+    if (!root)
+        return 0;
+    char sym_name[16];
+    // if (!(strcmp(root->data.str, "+") && strcmp(root->data.str, "-") && strcmp(root->data.str, "*") && strcmp(root->data.str, "/")))
+    // {
+    //     left()
+    // }
+    for (Node *child = root->children; child; child = child->next)
+    {
+        type_checking(child);
+    }
+}
+
 
 typedef struct __grammar
 {
