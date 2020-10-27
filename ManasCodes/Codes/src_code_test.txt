@@ -1,5 +1,7 @@
-program ( )
-{
-	declare list of variables u v : array [ 2 .. 5 ] [ 3 .. 6 ] of integer ;
-	m1 = m2 + a1 ;                 	
+program ( ) {
+    declare a : Boolean ;
+	declare b : integer ;
+    a = a &&& b ;
+    a = a &&& b ;
+    a = a &&& b ;
 }

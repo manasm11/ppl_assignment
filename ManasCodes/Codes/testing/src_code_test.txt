@@ -1,2 +1,4 @@
-program ( ) 
-declare a b
+program ( ) {
+    declare a : boolean ;
+    a = a &&& a ;
+}

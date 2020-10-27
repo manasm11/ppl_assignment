@@ -3,7 +3,7 @@
 #include <ctype.h>
 #define STACK_SIZE 1024
 #define debug(message) printf("[*] %s", message)
-#define NO_OF_KEYWORDS 13
+#define NO_OF_KEYWORDS 23
 #define NO_OF_PRINTING_COLUMNS 100
 #define elif else if
 int is_keyword(char *str)
@@ -44,7 +44,7 @@ Stack_Of_Nodes type_nodes;
 void initialise_stack_of_nodes(Stack_Of_Nodes *s)
 {
     s->nodes = (Node **)malloc(sizeof(Node *) * STACK_SIZE);
-    printf("NODES IS INITIALISED !!!\n");
+    // printf("NODES IS INITIALISED !!!\n");
 }
 
 typedef struct __stack
@@ -124,6 +124,32 @@ void push(Stack *s, Symbol sym)
     strcpy(s->stack[s->top].str, sym.str);
     s->stack[s->top].node = nodeNew(s->stack[s->top]);
 }
+
+int is_bool_operator(Token *t)
+{
+    // printf("GOING IN IS_BOOL with %s \n", t->str);
+    return !(strcmp(t->str, "&&&") && strcmp(t->str, "|||"));
+}
+int is_arithematic_operator(Token *t)
+{
+    return !(strcmp(t->str, "+") && strcmp(t->str, "-") && strcmp(t->str, "*") && strcmp(t->str, "/"));
+}
+
+int get_id_type(Token *t)
+{
+    // printf("TOP OF TYPE NODES: %d\n", type_nodes.top);
+    for (int i = 0; i < type_nodes.top + 1; i++)
+    {
+        // printf(type_nodes.nodes[i]->data.str) && NEWLINE;
+        if (!strcmp(type_nodes.nodes[i]->data.str, t->str))
+        {
+            // printf("ID TYPE OF %s is %d", type_nodes.nodes[i]->data.str, type_nodes.nodes[i]->data.id_type);
+            return type_nodes.nodes[i]->data.id_type;
+        }
+    }
+    return -1;
+}
+
 int parse(Grammar grammars[], Token *head, Stack stack)
 {
     if (!head)
@@ -143,6 +169,7 @@ int parse(Grammar grammars[], Token *head, Stack stack)
         // if(is_id){}
         // printf("[*] stack[top].str = %s\n[*] is_id = %d\n", stack.stack[stack.top].str, is_id);
         // Checking if it is an identifier
+
         if (!is_keyword(head->str))
         {
             // FIXME Will except numbers with first character as digit.
@@ -171,6 +198,7 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                 global_nodes.nodes[global_nodes.top]->data.type = ID;
                 stack.top--;
                 global_nodes.top--;
+
                 head = head->next;
                 // printf("HEAD = %s\n", head->str);
                 if (parse(grammars, head, stack))
@@ -252,12 +280,14 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                         NEWLINE;
                         type_nodes.nodes[++type_nodes.top] = temp_ref;
                     }
+                    // printf("KEYWORD VALUE: %s !!!\n", head->next->str);
                     // printf("HELLO !!!\n");
                     return 1;
                 }
             }
             // printf("[-] ERROR in line: %d\n", head->line);
         }
+
         // if (is_id && !is_keyword(head->str))
         // {
         //     strcpy(global_nodes.nodes[global_nodes.top]->data.str, head->str);
@@ -404,6 +434,28 @@ void print_type_nodes(Stack_Of_Nodes s)
     }
 }
 
+int type_check(Token *head)
+{
+    while (head)
+    {
+        if (head->next && !is_keyword(head) && !isdigit(head->str[0]) && is_bool_operator(head->next))
+        {
+            // printf("TYPE CHECK\n");
+            // printf("BOOLEAN OPERATOR DETECTED !!!\n");
+            // printf("GET ID TYPE : %d\n", get_id_type(head->next->next));
+            if (get_id_type(head) != BOOL_ID)
+            {
+                printf("ERROR in line %d: Boolean operator can be applied to boolean variables.\n", head->line);
+            }
+            if (BOOL_ID != get_id_type(head->next->next))
+            {
+                printf("ERROR in line %d: Type mismach\n", head->line);
+            }
+        }
+        head = head->next;
+    }
+}
+
 int main(int argc, char const *argv[])
 {
     // initialize_grammar("grammar_test.txt");
@@ -411,6 +463,7 @@ int main(int argc, char const *argv[])
     // pGrammars(grammars);
     // initialize_token_stream("src_code.txt");
     initialize_token_stream("src_code_test.txt");
+    Token *temp_head = head;
     // pTokens(head);
     Stack stack;
     initialise_stack(&stack);
@@ -421,7 +474,7 @@ int main(int argc, char const *argv[])
     stack.top = 0;
     Node *n = nodeNew(stack.stack[0]);
     global_nodes.nodes[0] = n;
-    printf("NEW GLOBAL NODES ACESSED !!!\n");
+    // printf("NEW GLOBAL NODES ACESSED !!!\n");
     global_nodes.top = 0;
     type_nodes.top = -1;
 
@@ -447,5 +500,6 @@ int main(int argc, char const *argv[])
     CLEAR_COLORS;
     // print_tree(root);
     print_type_nodes(type_nodes);
+    type_check(temp_head);
     return 0;
 }
