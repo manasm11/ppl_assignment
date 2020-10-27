@@ -6,6 +6,16 @@
 #define NO_OF_KEYWORDS 23
 #define NO_OF_PRINTING_COLUMNS 100
 #define elif else if
+// #define perror(line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth) \
+//     printf("%-10d\n", line);                                                             \
+//     printf(" %-10s\n", stmt_type);                                                       \
+//     printf(" %-10s\n", operator);                                                        \
+//     printf(" %-10s\n", lexeme1);                                                         \
+//     printf(" %-10d\n", id_type1);                                                        \
+//     printf(" %-10s\n", lexeme2);                                                         \
+//     printf(" %-10d\n", id_type2);                                                        \
+//     printf(" %-10d\n", depth);
+#define perror(line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth) printf("%-5d %-18s %-10s %-10s %-10s %-10s %-10s %-10d\n", line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth);
 int is_keyword(char *str)
 {
     char *keywords[NO_OF_KEYWORDS] = {
@@ -132,7 +142,21 @@ int is_bool_operator(Token *t)
 }
 int is_arithematic_operator(Token *t)
 {
-    return !(strcmp(t->str, "+") && strcmp(t->str, "-") && strcmp(t->str, "*") && strcmp(t->str, "/"));
+    return !(strcmp(t->str, "+") && strcmp(t->str, "-") && strcmp(t->str, "*") && strcmp(t->str, "/") && strcmp(t->str, "="));
+}
+
+char *id2str(int id)
+{
+    if (id == INTEGER_ID)
+        return "integer";
+    if (id == BOOL_ID)
+        return "Boolean";
+    if (id == REAL_ID)
+        return "real";
+    if (id == JAGGED_ARR_ID)
+        return "jagged";
+    if (id == RECT_ARR_ID)
+        return "rectangle";
 }
 
 int get_id_type(Token *t)
@@ -434,22 +458,55 @@ void print_type_nodes(Stack_Of_Nodes s)
     }
 }
 
+int get_token_depth(Token *t)
+{
+    static int i = 0;
+    // printf("Token: %s\n", t->str);
+    for (; i < type_nodes.top + 1; i++)
+    {
+        // printf("Checking %s\n", type_nodes.nodes[i]->data.str);
+        if (!strcmp(type_nodes.nodes[i]->data.str, t->str))
+        {
+            return type_nodes.nodes[i]->data.depth;
+        }
+    }
+    return -1;
+}
+
 int type_check(Token *head)
 {
+    print_heading("PRINTING TYPE ERRORS !!!");
+    BOLD_YELLOW &&printf("%-5s %-15s %-10s %-10s %-10s %-10s %-10s %-10d\n", "LINE", "STATEMENT TYPE", "OPERATOR", "LEFT LEXEME", "L-LEXEME TYPE", "RIGHT LEXEME", "R-LEXEME TYPE", "DEPTH") && CLEAR_COLORS;
+    int prev_line = -1;
     while (head)
     {
-        if (head->next && !is_keyword(head) && !isdigit(head->str[0]) && is_bool_operator(head->next))
+        int temp_line = head->line;
+        if (head->next && !is_keyword(head) && !isdigit(head->str[0]) && head->line != prev_line)
         {
-            // printf("TYPE CHECK\n");
-            // printf("BOOLEAN OPERATOR DETECTED !!!\n");
-            // printf("GET ID TYPE : %d\n", get_id_type(head->next->next));
-            if (get_id_type(head) != BOOL_ID)
+            if (is_bool_operator(head->next))
             {
-                printf("ERROR in line %d: Boolean operator can be applied to boolean variables.\n", head->line);
+                if (get_id_type(head) != BOOL_ID)
+                {
+                    // printf("ERROR in line %d: Boolean operator can be applied to boolean variables.\n", head->line);
+                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), 0);
+                    prev_line = head->line;
+                }
+                elif (BOOL_ID != get_id_type(head->next->next))
+                {
+                    // printf("ERROR in line %d: Type mismach\n", head->line);
+                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), 0);
+                    prev_line = head->line;
+                }
             }
-            if (BOOL_ID != get_id_type(head->next->next))
+            elif (is_arithematic_operator(head->next))
             {
-                printf("ERROR in line %d: Type mismach\n", head->line);
+                if ((get_id_type(head) != -1) && (get_id_type(head->next->next) != -1) && get_id_type(head) != get_id_type(head->next->next))
+                {
+
+                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), get_token_depth(head));
+                    //  get_token_depth(head->next->next));
+                    prev_line = head->line;
+                }
             }
         }
         head = head->next;

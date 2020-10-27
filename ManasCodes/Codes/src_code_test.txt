@@ -1,7 +1,8 @@
 program ( ) {
     declare a : Boolean ;
 	declare b : integer ;
+	a = a &&& a ;
     a = a &&& b ;
     a = a &&& b ;
-    a = a &&& b ;
+	a = b + b + a ;
 }

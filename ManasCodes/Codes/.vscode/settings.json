@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "limits": "cpp"
+        "limits": "cpp",
+        "system_error": "c"
     }
 }
