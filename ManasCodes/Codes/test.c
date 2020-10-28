@@ -15,7 +15,7 @@
 //     printf(" %-10s\n", lexeme2);                                                         \
 //     printf(" %-10d\n", id_type2);                                                        \
 //     printf(" %-10d\n", depth);
-#define perror(line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth) printf("%-5d %-15s %-10s %-15s %-15s %-15s %-15s %d\n", line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth);
+#define perror(line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth, message) printf("%-5d %-15s %-10s %-15s %-15s %-15s %-15s %d\n", line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth) && BOLD_RED &&printf("ERROR: ") && printf(message) && CLEAR_COLORS &&NEWLINE;
 int is_keyword(char *str)
 {
     char *keywords[NO_OF_KEYWORDS] = {
@@ -437,7 +437,7 @@ int print_heading(char heading[])
     {
         printf("*");
     }
-    printf(" %s ", heading);
+    BOLD_CYAN &&printf(" %s ", heading) && BOLD_MAGENTA;
     for (int i = 0; i < (NO_OF_PRINTING_COLUMNS - strlen(heading)) / 2 - 1; i++)
     {
         printf("*");
@@ -508,7 +508,7 @@ int type_check(Token *head)
             }
             // printf("SEMICOLON %d\n", sc_count);
             if (sc_count + 1 != n)
-                perror(head->line, "DECLARATION", "-", "R1", "-", "-", "-", get_token_depth(head));
+                perror(head->line, "DECLARATION", "R1", "{", "size", "}", "jagged", get_token_depth(head), "JAGGED ARRAY DECLARATION");
         }
         int temp_line = head->line;
         if (head->next && !is_keyword(head) && !isdigit(head->str[0]) && head->line != prev_line)
@@ -518,13 +518,22 @@ int type_check(Token *head)
                 if (get_id_type(head) != BOOL_ID)
                 {
                     // printf("ERROR in line %d: Boolean operator can be applied to boolean variables.\n", head->line);
-                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), get_token_depth(head));
+                    // char err_msg[64];
+                    // strcpy(err_msg, "");
+                    // strcat(err_msg, head->str);
+                    // strcat(err_msg, " IS NOT BOOLEAN");
+                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), get_token_depth(head), "TYPES NOT COMPATIBLE");
                     prev_line = head->line;
                 }
                 elif (BOOL_ID != get_id_type(head->next->next))
                 {
                     // printf("ERROR in line %d: Type mismach\n", head->line);
-                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), get_token_depth(head));
+                    // char err_msg[64];
+                    // strcpy(err_msg, "");
+                    // strcat(err_msg, head->str);
+                    // strcat(err_msg, " IS NOT BOOLEAN");
+
+                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), get_token_depth(head), "TYPES NOT COMPATIBLE");
                     prev_line = head->line;
                 }
             }
@@ -575,7 +584,14 @@ int type_check(Token *head)
                 head->next->next->next && (head_next_next_id = !strcmp(head->next->next->next->str, "/") ? REAL_ID : head_next_next_id);
                 if ((head_id != -1) && (head_next_next_id != -1) && head_id != head_next_next_id)
                 {
-                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, flag1 ? id_name1 : head->str, flag1 ? "integer" : id2str(head_id), flag2 ? id_name2 : head->next->next->str, flag2 ? "integer" : id2str(head_next_next_id), get_token_depth(head));
+                    // char err_msg[64];
+                    // strcpy(err_msg, "");
+                    // strcat(err_msg, head->str);
+                    // strcat(err_msg, " and ");
+                    // strcat(err_msg, head->next->next->str);
+                    // strcat(err_msg, " are not of same type.");
+
+                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, flag1 ? id_name1 : head->str, flag1 ? "integer" : id2str(head_id), flag2 ? id_name2 : head->next->next->str, flag2 ? "integer" : id2str(head_next_next_id), get_token_depth(head), "TYPES NOT COMPATIBLE");
                     // head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, flag1 ? id_name1 : head->str, flag1 ? "integer" : id2str(get_id_type(head)), flag2 ? id_name2 : head->next->next->str, flag2 ? "integer" : id2str(get_id_type(head->next->next)), get_token_depth(head));
                     // printf("line:%d\n", head->line);
                     //  get_token_depth(head->next->next));
@@ -619,17 +635,18 @@ int main(int argc, char const *argv[])
     stack.stack[0].node = root;
     global_nodes.nodes[0] = root;
     int val = parse(grammars, head, stack);
-    val ? debug("SUCCUSS\n") : debug("UNSUCCESSFUL\n");
+    // val ? debug("SUCCESS\n") : debug("UNSUCCESSFUL\n");
     // print_tree(root);
     reverse_children(&root);
     // printf("---------------------------------------------------\n");
     get_depth(root, -1);
 
-    BOLD_BLUE;
-    // printf("\n*******************************");
-    // printf("\n***** PRINTING PARSE TREE *****");
-    // printf("\n*******************************\n\033[0m");
-    CLEAR_COLORS;
+    // print_heading("")
+    // BOLD_BLUE;
+    // // printf("\n*******************************");
+    // // printf("\n***** PRINTING PARSE TREE *****");
+    // // printf("\n*******************************\n\033[0m");
+    // CLEAR_COLORS;
     print_tree(root);
     print_type_nodes(type_nodes);
     type_check(temp_head);

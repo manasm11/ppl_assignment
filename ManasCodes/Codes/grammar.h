@@ -114,6 +114,7 @@ int print_tree(Node *root)
     if (first)
     {
         first = 0;
+        print_heading("PRINTING PARSE TREE");
         BOLD_YELLOW &&printf("%-20s %-10s %-10s %-10s", "SYMBOL NAME", "DEPTH", "TERMINAL", "LEXEME") && CLEAR_COLORS &&NEWLINE;
     }
     if (!root)
