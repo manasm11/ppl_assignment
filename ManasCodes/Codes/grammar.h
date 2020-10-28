@@ -32,7 +32,7 @@ typedef struct __symbol
     int is_terminal;
     struct __symbol *next;
     int is_static;
-    char dimensions[32];
+    char dimensions[200];
     Type type;
     Id_type id_type;
     int grammar_rule_no;
