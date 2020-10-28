@@ -535,7 +535,7 @@ int type_check(Token *head)
                 }
             }
             tmp = head->next->next;
-            if (tmp->next && !strcmp(tmp->next->str, "["))
+            if (tmp && tmp->next && !strcmp(tmp->next->str, "["))
             {
                 // printf("ME YAHA AA GYA !!!\n");
                 strcpy(id_name2, tmp->str);
@@ -622,7 +622,7 @@ int main(int argc, char const *argv[])
     // printf("\n*******************************\n\033[0m");
     CLEAR_COLORS;
     print_tree(root);
-    // print_type_nodes(type_nodes);
+    print_type_nodes(type_nodes);
     type_check(temp_head);
     return 0;
 }
