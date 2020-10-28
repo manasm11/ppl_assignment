@@ -20,7 +20,7 @@
 <populate> -> R1 [ num ] : size num : values <vals>
 <vals> -> { <val_ext> }
 <nex> -> num <nex> 
-<nex> -> num
+<nex> ->
 <val_ext> -> <nex> ; <val_ext> 
 <val_ext> -> <nex>
 <Rectarr_type> -> array <dims_R> of integer ;

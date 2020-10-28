@@ -495,6 +495,21 @@ int type_check(Token *head)
 
     while (head)
     {
+        if (!strcmp(head->str, "R1"))
+        {
+            head = head->next->next->next->next->next->next;
+            int n = head->str[0] - '0';
+            int sc_count = 0;
+            while (strcmp(head->str, "}"))
+            {
+                if (!strcmp(head->str, ";"))
+                    sc_count++;
+                head = head->next;
+            }
+            // printf("SEMICOLON %d\n", sc_count);
+            if (sc_count + 1 != n)
+                perror(head->line, "DECLARATION", "-", "R1", "-", "-", "-", get_token_depth(head));
+        }
         int temp_line = head->line;
         if (head->next && !is_keyword(head) && !isdigit(head->str[0]) && head->line != prev_line)
         {
