@@ -139,22 +139,22 @@ int print_tree(Node *root)
     }
 }
 
-int type_checking(Node *root)
-{
-    static int first = 1;
-    static int count = 1;
-    if (!root)
-        return 0;
-    char sym_name[16];
-    // if (!(strcmp(root->data.str, "+") && strcmp(root->data.str, "-") && strcmp(root->data.str, "*") && strcmp(root->data.str, "/")))
-    // {
-    //     left()
-    // }
-    for (Node *child = root->children; child; child = child->next)
-    {
-        type_checking(child);
-    }
-}
+// int type_checking(Node *root)
+// {
+//     static int first = 1;
+//     static int count = 1;
+//     if (!root)
+//         return 0;
+//     char sym_name[16];
+//     // if (!(strcmp(root->data.str, "+") && strcmp(root->data.str, "-") && strcmp(root->data.str, "*") && strcmp(root->data.str, "/")))
+//     // {
+//     //     left()
+//     // }
+//     for (Node *child = root->children; child; child = child->next)
+//     {
+//         type_checking(child);
+//     }
+// }
 
 
 typedef struct __grammar

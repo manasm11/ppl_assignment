@@ -30,7 +30,7 @@
 <var_Ind> -> num
 <assign_stmnt> -> <arithmetic_expr> 
 <assign_stmnt> -> <bool_expr> 
-<arithmetic_expr> -> <gen_id> = <expr1> ;
+<arithmetic_expr> -> <var> = <expr1> ;
 <expr1> -> <term1>
 <expr1> -> <term1> + <expr1>
 <expr1> -> <term1> - <expr1>

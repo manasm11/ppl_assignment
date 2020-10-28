@@ -1,7 +1,7 @@
 #include "grammar.c"
 #include "tokenizer.c"
 #include <ctype.h>
-#define STACK_SIZE 1024
+#define STACK_SIZE 512
 #define debug(message) printf("[*] %s", message)
 #define NO_OF_KEYWORDS 23
 #define NO_OF_PRINTING_COLUMNS 100
@@ -15,7 +15,7 @@
 //     printf(" %-10s\n", lexeme2);                                                         \
 //     printf(" %-10d\n", id_type2);                                                        \
 //     printf(" %-10d\n", depth);
-#define perror(line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth) printf("%-5d %-18s %-10s %-10s %-10s %-10s %-10s %-10d\n", line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth);
+#define perror(line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth) printf("%-5d %-15s %-10s %-15s %-15s %-15s %-15s %d\n", line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth);
 int is_keyword(char *str)
 {
     char *keywords[NO_OF_KEYWORDS] = {
@@ -156,7 +156,8 @@ char *id2str(int id)
     if (id == JAGGED_ARR_ID)
         return "jagged";
     if (id == RECT_ARR_ID)
-        return "rectangle";
+        return "array";
+    return "NONE!!!";
 }
 
 int get_id_type(Token *t)
@@ -295,7 +296,7 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                         while (strcmp(temp->str, "of"))
                         {
                             strcat(temp_ref->data.dimensions, temp->str);
-                            strcat(temp_ref->data.dimensions, " ");
+                            // strcat(temp_ref->data.dimensions, " ");
                             // pToken(temp);
                             temp = temp->next;
                         }
@@ -450,34 +451,54 @@ int print_heading(char heading[])
 
 void print_type_nodes(Stack_Of_Nodes s)
 {
-    // printf("Size of s.top = %d", s.top);
+    // print_heading("PRINTING PARSE TABLE");
     print_heading("PRINTING TYPE EXPRESSION TABLE");
+    // BOLD_YELLOW;
+    // printf("");
+    // CLEAR_COLORS;
+    BOLD_YELLOW &&printf("%-10s %-10s %-22s %-10s", "VARIABLE", "IS_ARRAY", "IS_STATIC / DIMS", "DATA_TYPE") && CLEAR_COLORS &&NEWLINE;
     for (int i = 0; i < s.top + 1; i++)
     {
-        printf("%s, %d, %d, %s\n", s.nodes[i]->data.str, s.nodes[i]->data.id_type, s.nodes[i]->data.is_static, s.nodes[i]->data.dimensions);
+        char temp[64];
+        strcpy(temp, "");
+        strcat(temp, s.nodes[i]->data.id_type != 3 ? "-" : s.nodes[i]->data.is_static ? "Static" : "Dynamic");
+        strcat(temp, s.nodes[i]->data.dimensions);
+        printf("%-10s %-10s %-22s %-10s\n", s.nodes[i]->data.str, s.nodes[i]->data.id_type == 3 || s.nodes[i]->data.id_type == 4 ? id2str(s.nodes[i]->data.id_type) : "-", temp, (s.nodes[i]->data.id_type == INTEGER_ID || s.nodes[i]->data.id_type == REAL_ID || s.nodes[i]->data.id_type == BOOL_ID) ? id2str(s.nodes[i]->data.id_type) : "-");
     }
 }
 
-int get_token_depth(Token *t)
+// int get_token_depth(int line, char *operator)
+int get_token_depth(Token *root)
 {
-    static int i = 0;
+    // static int i = 0;
+    // int i = 0;
     // printf("Token: %s\n", t->str);
-    for (; i < type_nodes.top + 1; i++)
-    {
-        // printf("Checking %s\n", type_nodes.nodes[i]->data.str);
-        if (!strcmp(type_nodes.nodes[i]->data.str, t->str))
-        {
-            return type_nodes.nodes[i]->data.depth;
-        }
-    }
-    return -1;
+    // for (; i < type_nodes.top + 1; i++)
+    // {
+    //     // printf("Checking %s\n", type_nodes.nodes[i]->data.str);
+    //     if (!strcmp(type_nodes.nodes[i]->data.str, t->str))
+    //     {
+    //         return type_nodes.nodes[i]->data.depth;
+    //     }
+    // }
+    if (!root)
+        return 1;
+    // static int count = 1;
+    // printf("%d.%-20s %-10d %-10s %-10s", count++, sym_name, root->data.depth, root->data.is_terminal ? "TRUE" : "FALSE", root->data.is_terminal ? root->data.str : "***") && NEWLINE;
+    // for (Node *child = root->children; child; child = child->next)
+    // {
+    //     print_tree(child);
+    // }
+    return rand() % 200;
 }
 
 int type_check(Token *head)
 {
     print_heading("PRINTING TYPE ERRORS !!!");
-    BOLD_YELLOW &&printf("%-5s %-15s %-10s %-10s %-10s %-10s %-10s %-10d\n", "LINE", "STATEMENT TYPE", "OPERATOR", "LEFT LEXEME", "L-LEXEME TYPE", "RIGHT LEXEME", "R-LEXEME TYPE", "DEPTH") && CLEAR_COLORS;
+    BOLD_YELLOW &&printf("%-5s %-15s %-10s %-15s %-15s %-15s %-15s %s\n", "LINE", "STATEMENT TYPE", "OPERATOR", "LEFT LEXEME", "L-LEXEME TYPE", "RIGHT LEXEME", "R-LEXEME TYPE", "DEPTH") && CLEAR_COLORS;
     int prev_line = -1;
+    Token *prev = NULL;
+
     while (head)
     {
         int temp_line = head->line;
@@ -498,17 +519,62 @@ int type_check(Token *head)
                     prev_line = head->line;
                 }
             }
-            elif (is_arithematic_operator(head->next))
+            int flag1 = 0;
+            int flag2 = 0;
+            char id_name1[32];
+            char id_name2[32];
+            Token *tmp = NULL;
+            if (!strcmp(head->next->str, "["))
             {
-                if ((get_id_type(head) != -1) && (get_id_type(head->next->next) != -1) && get_id_type(head) != get_id_type(head->next->next))
+                strcpy(id_name1, head->str);
+                flag1 = 1;
+                while (head && strcmp(head->str, "]"))
                 {
+                    // printf(head->str) && NEWLINE;
+                    head = head->next;
+                }
+            }
+            tmp = head->next->next;
+            if (tmp->next && !strcmp(tmp->next->str, "["))
+            {
+                // printf("ME YAHA AA GYA !!!\n");
+                strcpy(id_name2, tmp->str);
+                flag2 = 1;
+            }
+            if (is_arithematic_operator(head->next))
+            {
+                // printf("ME YAHA HU !!!\n");
+                int head_id = -1;
+                if (!flag1)
+                    head_id = get_id_type(head);
 
-                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), get_token_depth(head));
+                // head_id = head_id == JAGGED_ARR_ID ? INTEGER_ID : head_id;
+                // head_id = head_id == RECT_ARR_ID ? INTEGER_ID : head_id;
+                else
+                    (head_id = INTEGER_ID);
+                head_id = !strcmp(prev->str, "/") ? REAL_ID : head_id;
+                int head_next_next_id = -1;
+                if (!flag2)
+                    head_next_next_id = get_id_type(head->next->next);
+
+                // head_next_next_id = head_next_next_id == JAGGED_ARR_ID ? INTEGER_ID : head_next_next_id;
+                // head_next_next_id = head_next_next_id == JAGGED_ARR_ID && !strcmp(head->next->next->next->str, "[") ? INTEGER_ID : head_next_next_id;
+                // head_next_next_id = head_next_next_id == RECT_ARR_ID && !strcmp(head->next->next->next->str, "[") ? INTEGER_ID : head_next_next_id;
+                // head_next_next_id = head_next_next_id == RECT_ARR_ID ? INTEGER_ID : head_next_next_id;
+                else
+                    (head_next_next_id = INTEGER_ID);
+                head->next->next->next && (head_next_next_id = !strcmp(head->next->next->next->str, "/") ? REAL_ID : head_next_next_id);
+                if ((head_id != -1) && (head_next_next_id != -1) && head_id != head_next_next_id)
+                {
+                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, flag1 ? id_name1 : head->str, flag1 ? "integer" : id2str(head_id), flag2 ? id_name2 : head->next->next->str, flag2 ? "integer" : id2str(head_next_next_id), get_token_depth(head));
+                    // head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, flag1 ? id_name1 : head->str, flag1 ? "integer" : id2str(get_id_type(head)), flag2 ? id_name2 : head->next->next->str, flag2 ? "integer" : id2str(get_id_type(head->next->next)), get_token_depth(head));
+                    // printf("line:%d\n", head->line);
                     //  get_token_depth(head->next->next));
                     prev_line = head->line;
                 }
             }
         }
+        prev = head;
         head = head->next;
     }
 }
@@ -555,8 +621,8 @@ int main(int argc, char const *argv[])
     // printf("\n***** PRINTING PARSE TREE *****");
     // printf("\n*******************************\n\033[0m");
     CLEAR_COLORS;
-    // print_tree(root);
-    print_type_nodes(type_nodes);
+    print_tree(root);
+    // print_type_nodes(type_nodes);
     type_check(temp_head);
     return 0;
 }
