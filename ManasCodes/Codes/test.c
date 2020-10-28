@@ -481,15 +481,9 @@ int get_token_depth(Token *root)
     //         return type_nodes.nodes[i]->data.depth;
     //     }
     // }
-    if (!root)
-        return 1;
-    // static int count = 1;
-    // printf("%d.%-20s %-10d %-10s %-10s", count++, sym_name, root->data.depth, root->data.is_terminal ? "TRUE" : "FALSE", root->data.is_terminal ? root->data.str : "***") && NEWLINE;
-    // for (Node *child = root->children; child; child = child->next)
-    // {
-    //     print_tree(child);
-    // }
-    return rand() % 200;
+    // if (!root)
+    //     return 1;
+    return 0;
 }
 
 int type_check(Token *head)
@@ -509,13 +503,13 @@ int type_check(Token *head)
                 if (get_id_type(head) != BOOL_ID)
                 {
                     // printf("ERROR in line %d: Boolean operator can be applied to boolean variables.\n", head->line);
-                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), 0);
+                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), get_token_depth(head));
                     prev_line = head->line;
                 }
                 elif (BOOL_ID != get_id_type(head->next->next))
                 {
                     // printf("ERROR in line %d: Type mismach\n", head->line);
-                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), 0);
+                    head->next && head->next->next &&perror(head->line, "ASSIGNMENT", head->next->str, head->str, id2str(get_id_type(head)), head->next->next->str, id2str(get_id_type(head->next->next)), get_token_depth(head));
                     prev_line = head->line;
                 }
             }
