@@ -1,3 +1,7 @@
+// ID: 2017B5A70546P Name: Manas Mishra
+// ID: 2017B4A70583P Name: Dhruv Patel
+// ID: 2017B3A70783P Name: Bhavya Gera
+// ID: 2017B3A70599P Name: Ayush Agrawal
 #include "grammar.c"
 #include "tokenizer.c"
 #include <ctype.h>
@@ -6,15 +10,7 @@
 #define NO_OF_KEYWORDS 24
 #define NO_OF_PRINTING_COLUMNS 100
 #define elif else if
-// #define perror(line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth) \
-//     printf("%-10d\n", line);                                                             \
-//     printf(" %-10s\n", stmt_type);                                                       \
-//     printf(" %-10s\n", operator);                                                        \
-//     printf(" %-10s\n", lexeme1);                                                         \
-//     printf(" %-10d\n", id_type1);                                                        \
-//     printf(" %-10s\n", lexeme2);                                                         \
-//     printf(" %-10d\n", id_type2);                                                        \
-//     printf(" %-10d\n", depth);
+
 #define perror(line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth, message) printf("%-5d %-15s %-10s %-15s %-15s %-15s %-15s %d\n", line, stmt_type, operator, lexeme1, id_type1, lexeme2, id_type2, depth) && BOLD_RED &&printf("ERROR: ") && printf(message) && CLEAR_COLORS &&NEWLINE;
 int is_keyword(char *str)
 {
@@ -652,13 +648,16 @@ int type_check(Token *head)
                 strcpy(id_name2, tmp->str);
                 flag2 = 1;
             }
+            // a [ 5 ] + b
+            // a / b + c
+            // a + b
             if (is_arithematic_operator(head->next))
             {
                 // printf("ME YAHA HU !!!\n");
                 int head_id = -1;
                 if (!flag1)
                     head_id = get_id_type(head);
-
+                
                 // head_id = head_id == JAGGED_ARR_ID ? INTEGER_ID : head_id;
                 // head_id = head_id == RECT_ARR_ID ? INTEGER_ID : head_id;
                 else

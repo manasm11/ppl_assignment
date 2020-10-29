@@ -1,3 +1,7 @@
+// ID: 2017B5A70546P Name: Manas Mishra
+// ID: 2017B4A70583P Name: Dhruv Patel
+// ID: 2017B3A70783P Name: Bhavya Gera
+// ID: 2017B3A70599P Name: Ayush Agrawal
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,7 +31,6 @@ int readGrammar(char filename[])
                 new_symbol->next = NULL;
                 grammars[lno].lhs = *new_symbol;
                 grammars[lno].rhs_head = NULL;
-                // pSymbol(new_symbol);
                 continue;
             }
 
@@ -37,14 +40,6 @@ int readGrammar(char filename[])
             new_symbol->is_terminal = !(t[0] == '<');
             new_symbol->next = grammars[lno].rhs_head;
             grammars[lno].rhs_head = new_symbol;
-            // printf("%s\n", t);
         }
-        // reverse_grammar(&(grammars[lno].rhs_head));
     }
 }
-// int main(int argc, char const *argv[])
-// {
-// initialize_grammar("grammar_test.txt");
-// pGrammars(grammars);
-//     return 0;
-// }

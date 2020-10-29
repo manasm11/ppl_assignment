@@ -1,3 +1,7 @@
+// ID: 2017B5A70546P Name: Manas Mishra
+// ID: 2017B4A70583P Name: Dhruv Patel
+// ID: 2017B3A70783P Name: Bhavya Gera
+// ID: 2017B3A70599P Name: Ayush Agrawal
 #include <stdio.h>
 typedef struct __token
 {
@@ -46,37 +50,3 @@ static void reverse_tokens(Token **head_ref)
     }
     *head_ref = prev;
 }
-// void add_token(Token *head, Token *token)
-// {
-//     token->next = head;
-//     // head->next = token;
-//     head = token;
-
-//     // return token;
-// }
-
-// Token *initialize_token(int line, int col, char *str)
-// {
-//     Token *t = (Token *)malloc(sizeof(Token));
-//     t->line = line;
-//     t->col = col;
-//     strcpy(t->str, str);
-//     t->next = NULL;
-//     return t;
-// }
-
-// int add_token(Tokens *tokens, Token *token)
-// {
-//     if (tokens->head == NULL)
-//     {
-//         tokens->head = token;
-//     }
-//     tokens->last = token;
-//     token->next = NULL;
-//     tokens->last =
-// }
-
-// typedef struct{
-//     KeyWordEnum type;
-//     char *value;
-// }KeyWord;

@@ -1,4 +1,8 @@
 
+// ID: 2017B5A70546P Name: Manas Mishra
+// ID: 2017B4A70583P Name: Dhruv Patel
+// ID: 2017B3A70783P Name: Bhavya Gera
+// ID: 2017B3A70599P Name: Ayush Agrawal
 #include "parser.c"
 
 Stack stack;
@@ -6,8 +10,6 @@ Token *temp_head;
 
 void initialize_driver(char *grammar_file, char *source_code_file)
 {
-    // char *grammar_file = "grammar.txt";
-    // char *source_code_file = "src_code.txt";
     readGrammar(grammar_file);
     tokeniseSourcecode(source_code_file);
     temp_head = head;
@@ -86,18 +88,12 @@ int main(int argc, char *argv[])
 
         case 3:
         {
-            // printParseTree(root);
             printParseTree(root);
-            // count = 1;
-            // first = 1;
-            // print_tree(root);
-            // BOLD_GREEN &&printf("PARSE TREE PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
         }
         break;
 
         case 4:
         {
-            // printTypeExpressionTable(type_nodes);
             print_type_nodes(type_nodes);
             BOLD_GREEN &&printf("TYPE EXPRESSION TABLE PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
         }
