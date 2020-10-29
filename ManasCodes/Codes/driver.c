@@ -6,8 +6,8 @@ Token *temp_head;
 
 void initialize_driver()
 {
-    char *grammar_file = "grammar_copy_2.txt";
-    char *source_code_file = "src_code_test.txt";
+    char *grammar_file = "grammar.txt";
+    char *source_code_file = "src_code.txt";
     initialize_grammar(grammar_file);
     initialize_token_stream(source_code_file);
     temp_head = head;
@@ -28,9 +28,6 @@ void initialize_driver()
     root = nodeNew(stack.stack[0]);
     stack.stack[0].node = root;
     global_nodes.nodes[0] = root;
-    // parse(grammars, head, stack);
-    // reverse_children(root);
-    // get_depth(root, -1);
 }
 
 int main(int argc, char *argv[])
@@ -65,22 +62,12 @@ int main(int argc, char *argv[])
 
         case 1:
         {
-            // if (!is_initialised_called)
-            // {
-            //     initialize_driver();
-            //     is_initialised_called = 1;
             BOLD_GREEN &&printf("PARSE TREE CREATED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
-            // }
         }
         break;
 
         case 2:
         {
-            // if (!is_initialised_called)
-            // {
-            //     initialize_driver();
-            //     is_initialised_called = 1;
-            // }
             type_check(temp_head);
             BOLD_GREEN &&printf("TYPE ERRORS PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
         }
@@ -88,15 +75,6 @@ int main(int argc, char *argv[])
 
         case 3:
         {
-            // if (!is_initialised_called)
-            // {
-            //     initialize_driver();
-            //     is_initialised_called = 1;
-            // }
-            // count = 1;
-            // first = 1;
-            // initialize_driver();
-            // printf("root->next->str = %s\n", root->next->data.str);
             count = 1;
             first = 1;
             print_tree(root);
@@ -106,20 +84,15 @@ int main(int argc, char *argv[])
 
         case 4:
         {
-            // if (!is_initialised_called)
-            // {
-            //     initialize_driver();
-            //     is_initialised_called = 1;
-            // }
             print_type_nodes(type_nodes);
             BOLD_GREEN &&printf("TYPE EXPRESSION TABLE PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
         }
         break;
-            // default:
-            // {
-            //     BOLD_RED &&printf("PLEASE ENTER VALID INPUT\n") && CLEAR_COLORS;
-            // }
-            // break;
+        default:
+        {
+            BOLD_RED &&printf("PLEASE ENTER VALID INPUT\n") && CLEAR_COLORS;
+        }
+        break;
         }
     }
     return 0;

@@ -5,6 +5,7 @@
 // #define NO_OF_NON_TERMINALS 2
 // #define NO_OF_GRAMMAR_RULES 47
 // <start> pro
+
 #define assert(condition, error_message) condition || RED &&printf("[-] %s !!!\n", error_message) && CLEAR_COLORS
 #include "colors.h"
 #define NEWLINE printf("\n")
@@ -109,13 +110,14 @@ Node *add_child(Node *parent, Node *node)
 
 int count = 1;
 int first = 1;
+// Grammar grammars[NO_OF_GRAMMAR_RULES];
 int print_tree(Node *root)
 {
     if (first)
     {
         first = 0;
         print_heading("PRINTING PARSE TREE");
-        BOLD_YELLOW &&printf("%-20s %-10s %-10s %-10s", "SYMBOL NAME", "DEPTH", "TERMINAL", "LEXEME") && CLEAR_COLORS &&NEWLINE;
+        BOLD_YELLOW &&printf("%-20s %-10s %-10s %-20s %-20s", "SYMBOL NAME", "DEPTH", "TERMINAL", "LEXEME", "GRAMMAR RULE LINE NUMBER") && CLEAR_COLORS &&NEWLINE;
     }
     if (!root)
         return 0;
@@ -132,8 +134,10 @@ int print_tree(Node *root)
     {
         strcpy(sym_name, root->data.str);
     }
-
-    printf("%d.%-20s %-10d %-10s %-10s", count++, sym_name, root->data.depth, root->data.is_terminal ? "TRUE" : "FALSE", root->data.is_terminal ? root->data.str : "***") && NEWLINE;
+    int grammar_rule_no = root->data.is_terminal ? 0 : root->data.grammar_rule_no + 1;
+    printf("%d.%-20s %-10d %-10s %-10s %20d", count++, sym_name, root->data.depth, root->data.is_terminal ? "TRUE" : "FALSE", root->data.is_terminal ? root->data.str : "***", grammar_rule_no);
+    // pGrammar(&grammars[root->data.grammar_rule_no]);
+    NEWLINE;
     for (Node *child = root->children; child; child = child->next)
     {
         print_tree(child);

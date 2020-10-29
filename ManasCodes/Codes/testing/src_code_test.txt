@@ -1,4 +1,0 @@
-program ( ) {
-    declare a : boolean ;
-    a = a &&& a ;
-}
