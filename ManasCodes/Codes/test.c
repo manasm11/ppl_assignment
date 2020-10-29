@@ -245,18 +245,21 @@ int parse(Grammar grammars[], Token *head, Stack stack)
 
                         // printf("is_type = %d\n", temp_ref->data.id_type);
                         temp_ref->data.id_type = INTEGER_ID;
+                        strcpy(temp_ref->data.dimensions, "<type=integer>");
                         type_nodes.nodes[++type_nodes.top] = temp_ref;
                     }
                     elif (!strcmp(temp->str, "Boolean"))
                     {
                         // printf("is_type = %d\n", temp_ref->data.id_type);
                         temp_ref->data.id_type = BOOL_ID;
+                        strcpy(temp_ref->data.dimensions, "<type=Boolean>");
                         type_nodes.nodes[++type_nodes.top] = temp_ref;
                     }
                     elif (!strcmp(temp->str, "real"))
                     {
                         // printf("is_type = %d\n", temp_ref->data.id_type);
                         temp_ref->data.id_type = REAL_ID;
+                        strcpy(temp_ref->data.dimensions, "<type=real>");
                         type_nodes.nodes[++type_nodes.top] = temp_ref;
                     }
                     elif (!strcmp(temp->str, "jagged"))
@@ -266,12 +269,64 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                         temp = temp->next->next;
                         // printf("HEALLO \n");
                         // pToken(temp);
-                        while (strcmp(temp->str, "of"))
-                        {
-                            strcat(temp_ref->data.dimensions, temp->str);
-                            strcat(temp_ref->data.dimensions, " ");
-                            // pToken(temp);
-                            temp = temp->next;
+                        char lo[3] ; char hi[3];
+                        strcpy(lo,temp->next->str);
+                        strcpy(hi,temp->next->next->next->str);
+                        int diff = atoi(hi) - atoi(lo);
+                        temp = temp->next->next->next->next->next->next->next;
+                        Token* aux = temp;
+                        if(strcmp(temp->str,"of")){
+                            temp = temp->next->next;
+                            strcpy(temp_ref->data.dimensions,"<type =jaggedArray, dimensions=3, range_R1=(");
+                            strcat(temp_ref->data.dimensions,lo);
+                            strcat(temp_ref->data.dimensions,",");
+                            strcat(temp_ref->data.dimensions,hi);
+                            strcat(temp_ref->data.dimensions,"), range_R2 = (");
+                            diff++;
+                            while(diff--){
+                                while(strcmp(aux->str,"size")){
+                                    aux=aux->next;
+                                }
+                                aux = aux->next;
+                                if(temp_ref->data.dimensions[strlen(temp_ref->data.dimensions)-1]!='(')
+                                strcat(temp_ref->data.dimensions,",");
+                                strcat(temp_ref->data.dimensions,aux->str);
+                                int loop = atoi(aux->str);
+                                strcat(temp_ref->data.dimensions,"[");
+                                aux = aux->next->next->next->next;
+                                while(loop--){
+                                    int count = 0;
+                                    while(strcmp(aux->str,";") && strcmp(aux->str,"}")){
+                                        count++;
+                                        aux = aux->next;
+                                    }
+                                    char tempo[10];
+                                    sprintf(tempo,"%d",count);
+                                    strcat(temp_ref->data.dimensions,tempo);
+                                    strcat(temp_ref->data.dimensions,",");
+                                    aux = aux->next;
+                                }
+                                temp_ref->data.dimensions[strlen(temp_ref->data.dimensions)-1] = ']';
+                            }
+                            strcat(temp_ref->data.dimensions,"), basicElementType = integer>");
+                        }
+                        else{
+                            strcpy(temp_ref->data.dimensions,"<type =jaggedArray, dimensions=2, range_R1=(");
+                            strcat(temp_ref->data.dimensions,lo);
+                            strcat(temp_ref->data.dimensions,",");
+                            strcat(temp_ref->data.dimensions,hi);
+                            strcat(temp_ref->data.dimensions,"), range_R2 = (");
+                            aux = aux->next->next->next->next->next->next->next->next->next;
+                            strcat(temp_ref->data.dimensions,aux->str);
+                            while(diff--){
+                                while(strcmp(aux->str,"size")){
+                                    aux=aux->next;
+                                }
+                                aux = aux->next;
+                                strcat(temp_ref->data.dimensions,",");
+                                strcat(temp_ref->data.dimensions,aux->str);
+                            }
+                            strcat(temp_ref->data.dimensions,"), basicElementType = integer>");
                         }
                         // printf(temp_ref->data.dimensions);
                         // NEWLINE;
@@ -279,27 +334,44 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                     }
                     elif (!strcmp(temp->str, "array"))
                     {
-                        // printf("is_type = %d\n", temp_ref->data.id_type);
                         temp_ref->data.id_type = RECT_ARR_ID;
-                        if (isdigit(temp->next->next->str[0]))
-                        {
-                            temp_ref->data.is_static = 1;
-                        }
-                        else
-                        {
-                            temp_ref->data.is_static = 0;
-                        }
+                        int no_of_dim = 0;
+                        strcpy(temp_ref->data.dimensions, "<type=rectangular Array,basicElementType=integer,");
                         temp = temp->next;
                         // printf("HEALLO \n");
                         // pToken(temp);
                         // printf("%d\n", temp_ref->data.id_type);
+                        temp_ref->data.is_static = 1;
                         while (strcmp(temp->str, "of"))
                         {
-                            strcat(temp_ref->data.dimensions, temp->str);
-                            // strcat(temp_ref->data.dimensions, " ");
+                            //if(strcmp(temp->str,"[")){
+                            no_of_dim++;
+                            strcat(temp_ref->data.dimensions,"range_R");
+                            char tempo[10];
+                            sprintf(tempo,"%d",no_of_dim);
+                            strcat(temp_ref->data.dimensions,tempo);
+                            strcat(temp_ref->data.dimensions,"=(");
+                            strcat(temp_ref->data.dimensions,temp->next->str);
+                             if (!isdigit(temp->next->str[0]))
+                            {
+                                temp_ref->data.is_static = 0;
+                            }
+                            strcat(temp_ref->data.dimensions,",");
+                            strcat(temp_ref->data.dimensions,temp->next->next->next->str);
+                            if (!isdigit(temp->next->next->next->str[0]))
+                            {
+                                temp_ref->data.is_static = 0;
+                            }
+                            strcat(temp_ref->data.dimensions,"),");
+                            //}
                             // pToken(temp);
-                            temp = temp->next;
+                            temp = temp->next->next->next->next->next;
                         }
+                        strcat(temp_ref->data.dimensions,"dimensions=");
+                        char tempo[10];
+                        sprintf(tempo,"%d",no_of_dim);
+                        strcat(temp_ref->data.dimensions,tempo);
+                        strcat(temp_ref->data.dimensions,">");
                         // printf("%d\n", temp_ref->data.id_type);
                         // printf("%s\n", temp_ref->data.dimensions);
                         NEWLINE;
