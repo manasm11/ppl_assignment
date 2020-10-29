@@ -3,7 +3,7 @@ typedef struct __token
 {
     int line;
     int col;
-    char str[32];
+    char str[64];
     struct __token *next;
 } Token;
 
@@ -16,7 +16,6 @@ void add_token(Token **head_ref, int lno, int cno, char *str)
 {
     /* 1. allocate node */
     Token *token = (Token *)malloc(sizeof(Token));
-    assert(token, "MAR GYE !!!");
     /* 2. put in the data  */
     token->line = lno;
     token->col = cno;

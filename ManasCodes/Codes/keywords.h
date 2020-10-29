@@ -14,6 +14,7 @@
 "integer",
 "real",
 "Boolean",
+"boolean",
 "jagged",
 "array",
 "R1",

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define NO_OF_GRAMMAR_RULES 49
+#define NO_OF_GRAMMAR_RULES 100
 #include "colors.h"
 // #define NO_OF_TERMINALS 3
 // #define NO_OF_NON_TERMINALS 2
