@@ -1,5 +1,5 @@
 
-#include "test.c"
+#include "parser.c"
 
 Stack stack;
 Token *temp_head;
