@@ -107,10 +107,10 @@ Node *add_child(Node *parent, Node *node)
     return node;
 }
 
+int count = 1;
+int first = 1;
 int print_tree(Node *root)
 {
-    static int first = 1;
-    static int count = 1;
     if (first)
     {
         first = 0;
@@ -156,7 +156,6 @@ int print_tree(Node *root)
 //         type_checking(child);
 //     }
 // }
-
 
 typedef struct __grammar
 {

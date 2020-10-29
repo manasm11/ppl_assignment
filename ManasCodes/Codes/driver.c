@@ -1,0 +1,126 @@
+
+#include "test.c"
+
+Stack stack;
+Token *temp_head;
+
+void initialize_driver()
+{
+    char *grammar_file = "grammar_copy_2.txt";
+    char *source_code_file = "src_code_test.txt";
+    initialize_grammar(grammar_file);
+    initialize_token_stream(source_code_file);
+    temp_head = head;
+    initialise_stack(&stack);
+    initialise_stack_of_nodes(&global_nodes);
+    initialise_stack_of_nodes(&type_nodes);
+    strcpy(stack.stack[0].str, "<start>");
+    stack.stack[0].is_terminal = 0;
+    stack.top = 0;
+    Node *n = nodeNew(stack.stack[0]);
+    global_nodes.nodes[0] = n;
+    global_nodes.top = 0;
+    type_nodes.top = -1;
+    stack.stack[0].node = root;
+    strcpy(stack.stack[0].str, "<start>");
+    stack.stack[0].is_terminal = 0;
+    stack.top = 0;
+    root = nodeNew(stack.stack[0]);
+    stack.stack[0].node = root;
+    global_nodes.nodes[0] = root;
+    // parse(grammars, head, stack);
+    // reverse_children(root);
+    // get_depth(root, -1);
+}
+
+int main(int argc, char *argv[])
+{
+    int is_initialised_called = 0;
+    int exit_loop = 0;
+    initialize_driver();
+    parse(grammars, head, stack);
+    reverse_children(&root);
+    get_depth(root, -1);
+    while (!exit_loop)
+    {
+        printf("\nEnter the task you want to perform:\n\n");
+        printf("0: For exiting from loop\n");
+        printf("1: For creating parse tree\n");
+        printf("2: Traverse the parse tree to construct typeExpressionTable. Also print the type errors while traversing the parse tree and accessing the typeExpressionTable \n");
+        printf("3: For printing the parse tree in the specified format \n");
+        printf("4: For printing the TypeExpressionTable in the specified format\n");
+
+        printf("\n\nYour Input: ");
+        int choice;
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+
+        case 0:
+        {
+            exit_loop = 1;
+        }
+        break;
+
+        case 1:
+        {
+            // if (!is_initialised_called)
+            // {
+            //     initialize_driver();
+            //     is_initialised_called = 1;
+            BOLD_GREEN &&printf("PARSE TREE CREATED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
+            // }
+        }
+        break;
+
+        case 2:
+        {
+            // if (!is_initialised_called)
+            // {
+            //     initialize_driver();
+            //     is_initialised_called = 1;
+            // }
+            type_check(temp_head);
+            BOLD_GREEN &&printf("TYPE ERRORS PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
+        }
+        break;
+
+        case 3:
+        {
+            // if (!is_initialised_called)
+            // {
+            //     initialize_driver();
+            //     is_initialised_called = 1;
+            // }
+            // count = 1;
+            // first = 1;
+            // initialize_driver();
+            // printf("root->next->str = %s\n", root->next->data.str);
+            count = 1;
+            first = 1;
+            print_tree(root);
+            BOLD_GREEN &&printf("PARSE TREE PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
+        }
+        break;
+
+        case 4:
+        {
+            // if (!is_initialised_called)
+            // {
+            //     initialize_driver();
+            //     is_initialised_called = 1;
+            // }
+            print_type_nodes(type_nodes);
+            BOLD_GREEN &&printf("TYPE EXPRESSION TABLE PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
+        }
+        break;
+            // default:
+            // {
+            //     BOLD_RED &&printf("PLEASE ENTER VALID INPUT\n") && CLEAR_COLORS;
+            // }
+            // break;
+        }
+    }
+    return 0;
+}

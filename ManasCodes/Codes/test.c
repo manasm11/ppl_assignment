@@ -398,7 +398,7 @@ int parse(Grammar grammars[], Token *head, Stack stack)
                         strcat(temp_ref->data.dimensions, ">");
                         // printf("%d\n", temp_ref->data.id_type);
                         // printf("%s\n", temp_ref->data.dimensions);
-                        NEWLINE;
+                        // NEWLINE;
                         type_nodes.nodes[++type_nodes.top] = temp_ref;
                     }
                     // printf("KEYWORD VALUE: %s !!!\n", head->next->str);
@@ -700,10 +700,10 @@ int type_check(Token *head)
     }
 }
 
-int main(int argc, char const *argv[])
+int test()
 {
     // initialize_grammar("grammar_test.txt");
-    initialize_grammar("grammar_copy_ki_copy.txt");
+    initialize_grammar("grammar_copy_2.txt");
     // pGrammars(grammars);
     // initialize_token_stream("src_code.txt");
     initialize_token_stream("src_code_test.txt");
