@@ -549,9 +549,6 @@ void print_type_nodes(Stack_Of_Nodes s)
 {
     // print_heading("PRINTING PARSE TABLE");
     print_heading("PRINTING TYPE EXPRESSION TABLE");
-    // BOLD_YELLOW;
-    // printf("");
-    // CLEAR_COLORS;
     BOLD_YELLOW &&printf("%-10s %-10s %-22s %-10s", "VARIABLE", "IS_ARRAY", "IS_STATIC / DIMS", "DATA_TYPE") && CLEAR_COLORS &&NEWLINE;
     for (int i = 0; i < s.top + 1; i++)
     {
@@ -699,14 +696,34 @@ int type_check(Token *head)
         head = head->next;
     }
 }
+void createParseTree(root)
+{
+    BOLD_GREEN &&printf("PARSE TREE CREATED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
+}
+
+
+
+void printParseTree(Node *root)
+{
+    // printParseTree(root);
+    count = 1;
+    first = 1;
+    print_tree(root);
+    BOLD_GREEN &&printf("PARSE TREE PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
+}
+void printTypeExpressionTable(Stack_Of_Nodes type_nodes)
+{
+    print_type_nodes(type_nodes);
+    BOLD_GREEN &&printf("TYPE EXPRESSION TABLE PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
+}
 
 int test()
 {
     // initialize_grammar("grammar_test.txt");
-    initialize_grammar("grammar_copy_2.txt");
+    readGrammar("grammar_copy_2.txt");
     // pGrammars(grammars);
     // initialize_token_stream("src_code.txt");
-    initialize_token_stream("src_code_test.txt");
+    tokeniseSourcecode("src_code_test.txt");
     Token *temp_head = head;
     // pTokens(head);
     Stack stack;

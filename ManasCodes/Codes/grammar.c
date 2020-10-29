@@ -6,7 +6,7 @@
 #define debug() printf("[*] RAN TILL File: %s, Line: %d\n", __FILE__, __LINE__)
 int exitt(int n) { exit(n); }
 Grammar grammars[NO_OF_GRAMMAR_RULES];
-int initialize_grammar(char filename[])
+int readGrammar(char filename[])
 {
     FILE *fp = fopen(filename, "r");
     assert(fp, "Grammar file not found");
@@ -44,7 +44,7 @@ int initialize_grammar(char filename[])
 }
 // int main(int argc, char const *argv[])
 // {
-    // initialize_grammar("grammar_test.txt");
-    // pGrammars(grammars);
+// initialize_grammar("grammar_test.txt");
+// pGrammars(grammars);
 //     return 0;
 // }

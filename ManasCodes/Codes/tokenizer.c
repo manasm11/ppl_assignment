@@ -4,7 +4,7 @@
 #include "tokens.h"
 #define assert(condition, error_message) !condition && printf("[-] ERROR: %s\n", error_message) ? exit(1) : 1
 Token *head = NULL;
-Token *initialize_token_stream(char filename[])
+Token *tokeniseSourcecode(char filename[])
 {
     FILE *fp = fopen(filename, "r");
     assert(fp, "Code file not found");

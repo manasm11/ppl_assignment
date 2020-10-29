@@ -4,12 +4,12 @@
 Stack stack;
 Token *temp_head;
 
-void initialize_driver()
+void initialize_driver(char *grammar_file, char *source_code_file)
 {
-    char *grammar_file = "grammar.txt";
-    char *source_code_file = "src_code.txt";
-    initialize_grammar(grammar_file);
-    initialize_token_stream(source_code_file);
+    // char *grammar_file = "grammar.txt";
+    // char *source_code_file = "src_code.txt";
+    readGrammar(grammar_file);
+    tokeniseSourcecode(source_code_file);
     temp_head = head;
     initialise_stack(&stack);
     initialise_stack_of_nodes(&global_nodes);
@@ -34,7 +34,18 @@ int main(int argc, char *argv[])
 {
     int is_initialised_called = 0;
     int exit_loop = 0;
-    initialize_driver();
+    char *grammar_file = "Grammar.txt";
+    char *src_code_file = "src_code.txt";
+    if (argc != 3)
+    {
+        RED &&printf("Grammar and source code files not specified properly, using %s and %s\N", grammar_file, src_code_file) && CLEAR_COLORS;
+        initialize_driver(grammar_file, src_code_file);
+    }
+    else
+    {
+        initialize_driver(argv[1], argv[2]);
+    }
+
     parse(grammars, head, stack);
     reverse_children(&root);
     get_depth(root, -1);
@@ -62,7 +73,7 @@ int main(int argc, char *argv[])
 
         case 1:
         {
-            BOLD_GREEN &&printf("PARSE TREE CREATED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
+            createParseTree(root);
         }
         break;
 
@@ -75,15 +86,18 @@ int main(int argc, char *argv[])
 
         case 3:
         {
-            count = 1;
-            first = 1;
-            print_tree(root);
-            BOLD_GREEN &&printf("PARSE TREE PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
+            // printParseTree(root);
+            printParseTree(root);
+            // count = 1;
+            // first = 1;
+            // print_tree(root);
+            // BOLD_GREEN &&printf("PARSE TREE PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
         }
         break;
 
         case 4:
         {
+            // printTypeExpressionTable(type_nodes);
             print_type_nodes(type_nodes);
             BOLD_GREEN &&printf("TYPE EXPRESSION TABLE PRINTED SUCCESSFULLY !!!\n") && CLEAR_COLORS;
         }
